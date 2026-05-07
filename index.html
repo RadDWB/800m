@@ -21,6 +21,7 @@
         <div class="tab-navigation">
           <button class="tab-btn active" data-tab="calculator" title="Pacing Calculator">📊 Calculator</button>
           <button class="tab-btn" data-tab="stopwatch" title="Training Stopwatch">⏱️ Stopwatch</button>
+          <button class="tab-btn" data-tab="manual" title="Handbuch">📖 Handbuch</button>
         </div>
         <button id="themeToggle" class="theme-toggle" aria-label="Theme umschalten" title="Dark/Light Mode">🌙</button>
       </div>
@@ -402,9 +403,277 @@
         </section>
       </div>
 
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- TAB 3: HANDBUCH -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <div id="manual-tab" class="tab-content">
+        <section class="manual-section">
+
+          <!-- Intro / Hero -->
+          <div class="manual-hero">
+            <h2>800m Trainer – Handbuch</h2>
+            <p>Vollständige Bedienungsanleitung und trainingswissenschaftliche Hintergründe für Trainer, Athleten und Sportlehrende. Alle Auswertungsmetriken werden hier erklärt und eingeordnet.</p>
+          </div>
+
+          <!-- ─── Abschnitt 1: Stoppuhr bedienen ─────────────────── -->
+          <div class="manual-section-block">
+            <h2>1. Stoppuhr bedienen</h2>
+
+            <h3>Start, Stop und Reset</h3>
+            <p>Die Stoppuhr wird über drei Hauptschaltflächen gesteuert. <strong>Start</strong> beginnt die Zeitmessung und aktiviert alle Split- und Lap-Funktionen. <strong>Stop</strong> pausiert die laufende Zeit – sie kann danach mit Start fortgesetzt werden, sodass kurze Unterbrechungen (z. B. bei Staffelübergaben) möglich sind, ohne die Messung zu verwerfen. <strong>Reset</strong> setzt alle Werte zurück auf null und löscht die aktuell aufgezeichnete Session.</p>
+
+            <h3>Split-Distanz wählen</h3>
+            <p>Über die Schaltflächen <strong>100 m – 200 m – 400 m</strong> wird festgelegt, welche Streckenabschnitte aufgezeichnet werden. Für die 800-m-Analyse empfiehlt sich <strong>100 m</strong>: Mit acht gleichmäßigen Abschnitten lässt sich der Geschwindigkeitsverlauf feingranular erfassen, taktische Kicks und Einbrüche werden sichtbar. Die 200-m-Option eignet sich für Wettkampfsituationen, wenn das manuelle Stoppen auf engem Raum schwierig ist. Die 400-m-Einstellung liefert den klassischen Halbzeit-Split.</p>
+
+            <h3>Split-Button vs. Lap-Button</h3>
+            <dl>
+              <dt>📍 Split</dt>
+              <dd>Erfasst eine <strong>Zwischenzeit</strong> für den aktuellen Streckenabschnitt gemäß gewählter Distanz. Die Uhr läuft unverändert weiter. Jeder Split-Eintrag zeigt Zeit, Tempo und den Vergleich zur Zielzeit. Ideal: nach jedem 100-m-Abschnitt drücken, während der Athlet an der Messperson vorbeiläuft.</dd>
+              <dt>🏁 Lap</dt>
+              <dd>Erfasst eine <strong>vollständige Runde</strong> und setzt den internen Runden-Zähler zurück. Beim 800-m-Lauf entspricht ein Lap einer 400-m-Runde auf der Bahn. Die kumulierte Gesamtzeit läuft weiter, der Runden-Timer beginnt von vorn. Geeignet, wenn der gesamte Lauf über mehrere 400-m-Runden beobachtet werden soll.</dd>
+            </dl>
+
+            <h3>Einstellungen</h3>
+            <dl>
+              <dt>🔊 Audio-Feedback</dt>
+              <dd>Bei jedem gespeicherten Split ertönt ein kurzer Signalton. Dies ist besonders nützlich, wenn die Augen auf den Athleten gerichtet sind und kein Blick aufs Display möglich ist. Deaktivierbar für lautlose Umgebungen (z. B. Schulsporthalle).</dd>
+              <dt>📳 Vibrations-Feedback</dt>
+              <dd>Ergänzend zum Audio-Signal vibriert das Gerät beim Split. Auf Geräten ohne Vibrationsmotor (Desktop, iPad) ohne Funktion. Empfohlen in lärm­reichen Wettkampf­umgebungen.</dd>
+              <dt>💡 Screen-Lock verhindern</dt>
+              <dd>Aktiviert die Wake-Lock-API, sodass der Bildschirm während aktiver Zeitmessung nicht dunkel wird. Erfordert eine HTTPS-Verbindung. Falls der Browser die API nicht unterstützt, erscheint eine Hinweismeldung.</dd>
+            </dl>
+
+            <h3>Datenexport</h3>
+            <p>Über <strong>Export Data</strong> werden alle gespeicherten Splits der aktuellen Session als JSON-Datei heruntergeladen. Die Datei enthält Zeitstempel, Distanzen, Splits in Millisekunden sowie das berechnete Tempo (min/km). Die Daten können in Tabellenprogramme (Excel, Google Sheets) importiert oder für eigene Auswertungsskripte genutzt werden.</p>
+
+            <div class="tip-box">
+              <strong>💡 Praxis-Tipp:</strong> Stelle das Gerät beim Wettkampf quer (Landscape-Modus) auf ein Stativ oder Klemmbrett, damit Start und Split nebeneinander gut erreichbar sind. Split mit dem Daumen, Lap mit dem Zeigefinger.
+            </div>
+          </div>
+
+          <!-- ─── Abschnitt 2: Lauf-Auswertung interpretieren ────── -->
+          <div class="manual-section-block">
+            <h2>2. Lauf-Auswertung interpretieren</h2>
+
+            <h3>Gleichmäßigkeitsindex (CV %)</h3>
+            <p>Der <strong>Variationskoeffizient</strong> (Coefficient of Variation) misst die relative Streuung der Split-Zeiten um den Mittelwert. Er wird berechnet als:</p>
+            <p><em>CV = (σ ÷ μ) × 100</em></p>
+            <p>Dabei ist σ die Standardabweichung aller Split-Zeiten und μ der arithmetische Mittelwert. Ein niedriger CV bedeutet, dass alle Abschnitte nahezu gleich schnell gelaufen wurden.</p>
+
+            <table class="grade-table">
+              <thead>
+                <tr>
+                  <th>CV-Wert</th>
+                  <th>Bewertung</th>
+                  <th>Beschreibung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="grade-row-a">
+                  <td>&lt; 2 %</td>
+                  <td><span class="grade-badge grade-a">A</span></td>
+                  <td>Weltklasse-Even-Pacing – nahezu perfekte Gleichmäßigkeit</td>
+                </tr>
+                <tr class="grade-row-b">
+                  <td>2–4 %</td>
+                  <td><span class="grade-badge grade-b">B</span></td>
+                  <td>Gutes, kontrolliertes Pacing – geringfügige Schwankungen</td>
+                </tr>
+                <tr class="grade-row-c">
+                  <td>4–7 %</td>
+                  <td><span class="grade-badge grade-c">C</span></td>
+                  <td>Solide – erkennbare Tempo­schwankungen, noch akzeptabel</td>
+                </tr>
+                <tr class="grade-row-d">
+                  <td>&gt; 7 %</td>
+                  <td><span class="grade-badge grade-d">D</span></td>
+                  <td>Verbesserungsbedarf – taktische oder physische Probleme</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>Trainingswissenschaftliche Einordnung: Pacing-Konsistenz ist unmittelbar mit der Fähigkeit verknüpft, unterhalb der <strong>anaeroben Schwelle (LT2)</strong> zu laufen. Sobald ein Abschnitt deutlich zu schnell gelaufen wird, steigt die Laktat­konzen­tration überproportional – der Körper befindet sich im anaeroben Bereich. Die daraus resultierende H⁺-Ionen-Akkumulation hemmt die Muskelkontrak­tion und erzwingt eine Verlangsamung in späteren Abschnitten. Ein niedriger CV ist daher ein Indikator für gutes Laktat-Management und hohe aerobe Kapazität.</p>
+
+            <h3>Ermüdungsindex (%)</h3>
+            <p>Der Ermüdungsindex beschreibt den prozentualen Unterschied der Durchschnittsgeschwindigkeit zwischen zweiter und erster Hälfte:</p>
+            <p><em>Ermüdungsindex = ((∅ 2. Hälfte − ∅ 1. Hälfte) ÷ ∅ 1. Hälfte) × 100</em></p>
+            <p>Da langsamere Zeiten größere Zahlenwerte bedeuten, signalisiert ein <strong>negativer Wert</strong>, dass die zweite Hälfte <em>schneller</em> gelaufen wurde (Negative Split). Dies ist im Ausdauersport das Optimalmodell.</p>
+
+            <dl>
+              <dt>Negative Werte (z. B. −2 %)</dt>
+              <dd><strong>Negative Split</strong> – die zweite Hälfte wurde schneller absolviert als die erste. Physiologisch ideal für Wettkämpfe: Das initiale ATP-PC-System ermöglicht einen kontrollierten Start; über die progressive Einlaufphase akkumuliert sich Laktat weniger stark, und der Endspurt kann aus vollem aerobem Potenzial gezogen werden.</dd>
+              <dt>0–3 % (positiv)</dt>
+              <dd><strong>Even-Pacing</strong> – sehr geringe Verlangsamung, in der Praxis kaum von einem Negativsplit unterscheidbar. Gilt als sehr gut, besonders im Leistungstraining.</dd>
+              <dt>3–8 % (positiv)</dt>
+              <dd><strong>Leichte positive Split</strong> – der klassischste Fall: Erster Schwung ist oft etwas zu schnell, die zweite Hälfte leicht langsamer. Im Trainingsalltag häufig und bedingt akzeptabel, zeigt aber Optimierungspotenzial im Startpacing.</dd>
+              <dt>&gt; 8 % (positiv)</dt>
+              <dd><strong>Starke positive Split</strong> – deutliches Zeichen für einen zu schnellen Start. Die Laktat-Akkumulation hat die Muskulatur in der zweiten Hälfte stark übersäuert (H⁺-bedingte Enzymhemmung). Typisch nach zu aggressivem Anfangstempo.</dd>
+            </dl>
+
+            <p>Der Ermüdungsindex ist ein direkter Indikator für das <strong>Laktat-Management</strong>: Wer einen hohen positiven Split aufweist, hat in der ersten Hälfte die Laktat-Produktionsrate (V̇La) weit über die Eliminationsrate (La−) gesteigert. Die resultierende metabolische Azidose (pH-Abfall) führt zum bekannten „Einbruch" auf den letzten 200 m.</p>
+
+            <h3>Bewertungsnoten</h3>
+            <p>Die Gesamtnote kombiniert CV und Ermüdungsindex zu einer Schnellübersicht:</p>
+
+            <table class="grade-table">
+              <thead>
+                <tr>
+                  <th>Note</th>
+                  <th>CV</th>
+                  <th>Ermüdungsindex</th>
+                  <th>Bedeutung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="grade-row-a">
+                  <td><span class="grade-badge grade-a">A</span> Hervorragend</td>
+                  <td>&lt; 2 %</td>
+                  <td>&lt; 3 %</td>
+                  <td>Weltklasse-Pacing, optimale Laktat-Kontrolle</td>
+                </tr>
+                <tr class="grade-row-b">
+                  <td><span class="grade-badge grade-b">B</span> Gut</td>
+                  <td>&lt; 4 %</td>
+                  <td>&lt; 6 %</td>
+                  <td>Kontrollierter Lauf, geringes Ermüdungsdefizit</td>
+                </tr>
+                <tr class="grade-row-c">
+                  <td><span class="grade-badge grade-c">C</span> Solide</td>
+                  <td>&lt; 7 %</td>
+                  <td>&lt; 10 %</td>
+                  <td>Erkennbare Schwankungen, Verbesserungspotenzial</td>
+                </tr>
+                <tr class="grade-row-d">
+                  <td><span class="grade-badge grade-d">D</span> Verbesserungsbedarf</td>
+                  <td>≥ 7 %</td>
+                  <td>≥ 10 %</td>
+                  <td>Taktische oder physische Schwierigkeiten</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="tip-box">
+              <strong>💡 Wichtiger Hinweis:</strong> Note A im Training bedeutet <em>nicht</em> automatisch die beste Wettkampfzeit. Taktische Variationen – etwa ein bewusster Frontalangriff in Rennen mit taktischem Charakter oder ein aggressiver Endspurt aus Negativsplit-Ausgangslage – können leistungssteigernde Strategien sein, auch wenn sie CV und Ermüdungsindex rechnerisch verschlechtern.
+            </div>
+
+            <h3>Halbzeitvergleich (400m vs. 400m)</h3>
+            <p>Der direkte Vergleich der ersten und zweiten 400 m zeigt das taktische Grundmuster des Laufs. Das <strong>physiologisch optimale Verhältnis</strong> für 800-m-Läufe liegt bei einem leichten positiven Split von <strong>+1 bis +3 %</strong>:</p>
+            <ul>
+              <li>Die ersten 100–150 m werden durch das ATP-PC-System (Phosphokreatin) ohne Laktat-Akkumulation gespeist, was einen etwas schnelleren Start ermöglicht.</li>
+              <li>Der aerobe Metabolismus benötigt 45–90 Sekunden zur vollen Aktivierung (VO₂-Kinetik), sodass die erste Hälfte stets auf einem leicht höheren anaeroben Anteil läuft.</li>
+              <li>Ein Verhältnis von etwa 49:51 (erste zu zweite Hälfte als Anteil an der Gesamtzeit) ist empirisch mit optimalen Wettkampfzeiten assoziiert.</li>
+            </ul>
+          </div>
+
+          <!-- ─── Abschnitt 3: QR-Code teilen ───────────────────── -->
+          <div class="manual-section-block">
+            <h2>3. QR-Code teilen</h2>
+
+            <h3>Was der QR-Code enthält</h3>
+            <p>Der generierte QR-Code kodiert einen vollständigen Link, der alle relevanten Lauf­daten enthält: alle Split-Zeiten in Millisekunden, das Datum der Session, die Gesamtzeit, CV, Ermüdungsindex und die errechnete Bewertungsnote. Die Daten werden <strong>ausschließlich im URL-Hash</strong> (nach dem #-Zeichen) gespeichert – diese werden nie an einen Server übertragen.</p>
+
+            <h3>So scannt der Athlet</h3>
+            <dl>
+              <dt>iPhone / iPad</dt>
+              <dd>Kamera-App öffnen → Kamera auf den QR-Code richten → gelber Link erscheint oben → antippen. Der Standard-Browser öffnet sich mit der vollständigen Auswertung.</dd>
+              <dt>Android</dt>
+              <dd>Kamera-App öffnen (ab Android 9 mit eingebautem QR-Scanner) oder alternativ die Google-Lens-Funktion nutzen → antippen des erscheinenden Links. Auf älteren Geräten: eine separate QR-Scanner-App (z. B. „QR Code Reader") installieren.</dd>
+              <dt>Alle Geräte</dt>
+              <dd>Alternativ kann der Link auch manuell kopiert und per WhatsApp, Signal oder E-Mail geteilt werden. Der Empfänger öffnet ihn im Browser ohne App-Installation.</dd>
+            </dl>
+
+            <h3>Datenschutz und Lokale Verarbeitung</h3>
+            <p>Die 800m-Trainer-App arbeitet vollständig <strong>clientseitig</strong>. Es werden keine Daten an einen Server gesendet, kein Nutzer-Account wird benötigt, und kein Tracking findet statt. Die Split-Daten werden im URL-Hash als Base64-kodierter JSON-String übermittelt. Da Hash-Fragments nie in HTTP-Requests enthalten sind, werden die Laufdaten auch bei Verwendung von Proxy-Servern oder CDNs nicht protokolliert. Trainer können die Auswertung bedenkenlos mit Athleten teilen, ohne datenschutzrechtliche Einwilligungspflichten im schulischen oder vereinssportlichen Kontext auszulösen.</p>
+
+            <div class="tip-box">
+              <strong>💡 Tipp für Mannschaftstraining:</strong> Zeige den QR-Code nach dem Lauf direkt auf dem Trainingsgerät an. Alle Athleten können gleichzeitig scannen – der Link öffnet bei jedem dieselbe Auswertung.
+            </div>
+          </div>
+
+          <!-- ─── Abschnitt 4: Trainingswiss. Grundlagen ─────────── -->
+          <div class="manual-section-block">
+            <h2>4. Trainingswissenschaftliche Grundlagen</h2>
+
+            <h3>Energiesysteme beim 800-m-Lauf</h3>
+            <p>Der 800-m-Lauf gilt als <em>Mixed-Event</em>: Er belastet alle drei Hauptenergiesysteme gleichzeitig in charakteristischen Anteilen. Die häufig zitierten Werte nach <strong>Gastin (2001)</strong> für einen gut trainierten Mittelstreckler:</p>
+            <ul>
+              <li><strong>ATP-PC-System (anaerob alaktazid): ca. 10–15 %</strong> – Phosphokreatin­spaltung in den ersten 5–10 Sekunden; keine Laktat­bildung, aber sehr begrenzte Kapazität.</li>
+              <li><strong>Anaerobe Glykolyse (anaerob laktazid): ca. 40–50 %</strong> – Schnelle Energiebereitstellung aus Glykogen unter Laktat­bildung; dominiert die erste Hälfte und alle hochintensiven Phasen.</li>
+              <li><strong>Aerober Stoffwechsel: ca. 35–45 %</strong> – Oxidative Phosphorylierung; gewinnt in der zweiten Hälfte zunehmend Bedeutung; hauptverantwortlich für das Durchhaltevermögen.</li>
+            </ul>
+            <p>Die genaue Verteilung variiert stark mit Laufzeit, individuellem Trainingszustand und Renntaktik. Langsamere Läufer (Laufzeit &gt; 2:10 min) haben einen deutlich höheren aeroben Anteil; Sprintstärke­orientierte Athleten (Laufzeit &lt; 1:50 min) nutzen den anaeroben Anteil intensiver.</p>
+
+            <h3>Laktatthreshold 1 (LT1) und LT2 für das Pacing</h3>
+            <dl>
+              <dt>LT1 – Aerobe Schwelle (ca. 2 mmol/L)</dt>
+              <dd>Unterhalb von LT1 eliminiert der Körper Laktat schneller als es produziert wird. Dauerläufe bei LT1-Intensität sind nahezu beliebig lang durchhaltbar (Fettstoffwechsel, geringer Glykogen­verbrauch). Im 800-m-Kontext relevant für Warm-up und Regenerationsläufe.</dd>
+              <dt>LT2 – Anaerobe Schwelle (ca. 4 mmol/L)</dt>
+              <dd>An LT2 halten sich Laktat-Produktion und Elimination die Waage (Maximal Lactate Steady State, MLSS). Intensitäten knapp oberhalb LT2 können ca. 20–60 Minuten aufrechterhalten werden. Im 800-m-Rennen laufen Athleten weit oberhalb von LT2 – typische Renntieflaktatwerte liegen bei 12–18 mmol/L.</dd>
+            </dl>
+            <p>Für das Pacing ergibt sich: Wer in den ersten 200 m deutlich über seine LT2-Intensität geht, akkumuliert ab Minute 0 hohe Laktatwerte. Die Pufferkapazität (Bicarbonat-System) ist begrenzt; ein zu schneller Start bedeutet daher unweigerlich einen erzwungenen Einbruch in den finalen 200 m.</p>
+
+            <h3>Warum entstehen positive Splits?</h3>
+            <p>Positive Splits (zweite Hälfte langsamer) sind das Ergebnis eines komplexen metabolischen Kaskadenprozesses:</p>
+            <ol>
+              <li><strong>Laktat-Akkumulation:</strong> Bei Übersteigen der LT2-Intensität übersteigt die Laktat­produktion die Leber- und Muskel­elimination. Laktat­konzen­tration steigt exponentiell.</li>
+              <li><strong>H⁺-Ionen-Akkumulation:</strong> Laktat selbst ist physiologisch kein direktes Problem; die begleitende Protonenakkumulation (intra­zellulärer pH-Abfall von ~7,1 auf ~6,8) hemmt jedoch Schlüssel­enzyme der Glykolyse (Phosphofructokinase, PFK) und stört die Ca²⁺-Bindung am Troponin – die Muskelkontraktion wird ineffizienter.</li>
+              <li><strong>ATP-PC-Depletion:</strong> Die Phosphokreatin­reserven sind nach 8–15 Sekunden erschöpft. Eine Regeneration ist erst nach mehreren Minuten möglich.</li>
+              <li><strong>Zentralnervöse Schutz­mechanismen:</strong> Das zentrale Ermüdungsmodell (Noakes) postuliert, dass das ZNS bei drohender Homöostasegefährdung die Muskel­rekrutierung reduziert – die empfundene Erschöpfung zwingt zur Verlangsamung.</li>
+            </ol>
+
+            <h3>Empfohlene Trainingsformen für besseres Pacing</h3>
+            <ul>
+              <li><strong>400-m-Wiederholungen (5–8 × 400 m bei 800-m-Zielzeit-Tempo, Pause 3–5 min):</strong> Trainiert das neuromuskuläre Tempo­gefühl auf Wettkampf­geschwindigkeit; Laktatkurve im Bereich LT2+10 %.</li>
+              <li><strong>Tempo-Läufe (2–4 × 800 m bei 105–108 % der Zielzeit, Pause 5–8 min):</strong> Verbessert die Laktat­puffer­kapazität und die Kinetik der VO₂-max-Nutzung.</li>
+              <li><strong>Pace-Control-Training (800 m in gleichmäßigen 100-m-Splits, ±0,5 s Toleranz):</strong> Direktes Split-Feedback mit App-Unterstützung; schärft das propriozeptive Tempo­bewusstsein. Ziel: CV &lt; 3 % als Trainings­standard.</li>
+              <li><strong>Progressivläufe (800 m, jede 100-m-Einheit 0,3–0,5 s schneller):</strong> Trainiert den physiologisch sinnvollen Negativsplit und das Halten einer Endgeschwindigkeit trotz Laktat­belastung.</li>
+            </ul>
+          </div>
+
+          <!-- ─── Abschnitt 5: Tipps für Trainer ──────────────────── -->
+          <div class="manual-section-block">
+            <h2>5. Tipps für Trainer</h2>
+
+            <h3>Wann Split aufnehmen?</h3>
+            <p>Die optimale Messfrequenz hängt vom Kontext ab:</p>
+            <ul>
+              <li><strong>Trainingsläufe:</strong> Idealerweise jede 100 m – gibt das feinste Bild über Tempo­management und ermöglicht eine präzise CV-Berechnung. Benötigt einen Standort am Innenrand der Laufbahn bei jedem 100-m-Kreuzungspunkt.</li>
+              <li><strong>Wettkampf:</strong> Jede 200 m – realistisch durchführbar vom Tribünenbereich aus, ohne physisch an der Bahn zu stehen. Gibt Halbzeit, Drei-Viertel-Zeit und Zielzeit.</li>
+              <li><strong>Gruppentraining:</strong> Ein Trainer kann realistisch 2–3 Athleten gleichzeitig tracken, wenn er die Lap-Funktion für Rundenübergänge und Split für Zwischenpunkte kombiniert. Nutze separate Geräte oder mehrere Browser-Tabs pro Athlet.</li>
+            </ul>
+
+            <h3>Auswertungsgespräch mit dem Athleten</h3>
+            <p>Zeige nach dem Lauf zunächst die <strong>Gesamtzeit und die Note</strong> – positive Verstärkung oder konkretes Erfolgserlebnis zuerst. Gehe dann auf den <strong>Split-Verlauf</strong> ein: Welcher Abschnitt war der schnellste? Wann genau begann die Verlangsamung? Erst im dritten Schritt folgen konkrete Verbesserungsansätze, eingebettet in Fragen:</p>
+            <ul>
+              <li>„Was hast du bei Meter 400 gespürt?"</li>
+              <li>„Wann genau hast du gemerkt, dass das Tempo nicht haltbar ist?"</li>
+              <li>„Welchen Split-Wert möchtest du beim nächsten Lauf verbessern?"</li>
+            </ul>
+            <p>Diese Gesprächsführung fördert die <strong>propriozeptive Selbstwahrnehmung</strong> des Athleten und verankert das objektive Datenbild mit dem subjektiven Lauferlebnis – ein zentraler Baustein moderner Ausdauerpädagogik.</p>
+
+            <h3>Längsschnittauswertung</h3>
+            <p>Die wirksamste Nutzung der App entsteht im zeitlichen Verlauf. Exportiere nach jeder Session die JSON-Daten und halte folgende Kennwerte in einer einfachen Tabelle fest:</p>
+            <ul>
+              <li>Datum und Laufbedingungen (Temperatur, Wind, Bahnzustand)</li>
+              <li>Gesamtzeit in Sekunden</li>
+              <li>CV in Prozent</li>
+              <li>Ermüdungsindex in Prozent</li>
+              <li>Schnellster und langsamster 100-m-Split</li>
+            </ul>
+            <p>Über 6–10 Sessions zeigt sich: Sinkt der CV bei gleichbleibender oder besserer Gesamtzeit, verbessert sich die Pacing-Kompetenz nachweisbar. Sinkt der Ermüdungsindex gegen null oder in den negativen Bereich, schlägt das Ausdauertraining durch. Diese Längsschnitt­daten sind wertvoller als jede Einzelmessung und liefern eine evidenzbasierte Grundlage für Trainingsplan-Anpassungen.</p>
+
+            <div class="tip-box">
+              <strong>💡 Digitaler Trainingsnachweis:</strong> Die exportierten Daten und QR-Code-Links können für schulische Leistungsdokumentationen oder Vereinsberichte verwendet werden – ohne Datenschutzbedenken, da keine personenbezogenen Daten in der App gespeichert werden.
+            </div>
+          </div>
+
+        </section>
+      </div>
+
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
   <script src="app.js"></script>
   <script src="stopwatch.js"></script>
 </body>

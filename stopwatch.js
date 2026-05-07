@@ -36,6 +36,8 @@ class StopwatchApp {
     this.attachEventListeners();
     this.loadSettings();
     this.renderHistory();
+    this.injectAuswertungButton();
+    this.decodeSharedRun();
   }
 
   cacheElements() {
@@ -160,6 +162,10 @@ class StopwatchApp {
 
       if (this.animationId) {
         cancelAnimationFrame(this.animationId);
+      }
+
+      if (this.elapsedTime > 5000 && this.splits.length > 0) {
+        setTimeout(() => this.showResults(), 400);
       }
     }
   }
@@ -444,6 +450,446 @@ class StopwatchApp {
       this.history = [];
       localStorage.removeItem('stopwatch-history');
       this.renderHistory();
+    }
+  }
+
+  // ─── FEATURE 1: Post-Run Results Engine ──────────────────────────────
+
+  injectAuswertungButton() {
+    // Insert "Auswertung" button next to Reset in the DOM
+    const resetBtn = document.getElementById('stopwatchReset');
+    if (!resetBtn || document.getElementById('auswertungBtn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'auswertungBtn';
+    btn.className = 'stopwatch-btn auswertung-btn';
+    btn.title = 'Lauf-Auswertung anzeigen';
+    btn.textContent = '📊 Auswertung';
+    btn.disabled = true;
+    btn.addEventListener('click', () => this.showResults());
+    resetBtn.insertAdjacentElement('afterend', btn);
+  }
+
+  calculateMetrics(data) {
+    // data can be passed (for shared runs) or fall back to live session
+    const splits   = data ? data.splits   : this.splits;
+    const totalMs  = data ? data.totalTime : this.elapsedTime;
+    const splitDist = data ? (data.splitDistance || this.currentSplitDistance) : this.currentSplitDistance;
+
+    const numSplits = splits.length;
+    if (numSplits === 0) return null;
+
+    // Individual split durations
+    const splitTimes = splits.map((s, i) => {
+      if (i === 0) return s.cumulativeTime;
+      return s.cumulativeTime - splits[i - 1].cumulativeTime;
+    });
+
+    const avgSplitTime = splitTimes.reduce((a, b) => a + b, 0) / numSplits;
+
+    const bestIdx  = splitTimes.reduce((bi, t, i) => t < splitTimes[bi] ? i : bi, 0);
+    const worstIdx = splitTimes.reduce((wi, t, i) => t > splitTimes[wi] ? i : wi, 0);
+
+    const variance = splitTimes.reduce((acc, t) => acc + Math.pow(t - avgSplitTime, 2), 0) / numSplits;
+    const stdDev   = Math.sqrt(variance);
+    const cv       = (stdDev / avgSplitTime) * 100;
+
+    // Half comparison (requires >= 4 splits)
+    let firstHalfMs = null, secondHalfMs = null, fatigueIndex = null;
+    if (numSplits >= 4) {
+      const half = Math.floor(numSplits / 2);
+      firstHalfMs  = splits[half - 1].cumulativeTime;
+      secondHalfMs = totalMs - firstHalfMs;
+      fatigueIndex = ((secondHalfMs - firstHalfMs) / firstHalfMs) * 100;
+    }
+
+    // Pace per km
+    const paceMs    = totalMs / 0.8;
+    const paceSecs  = Math.floor(paceMs / 1000);
+    const paceMin   = Math.floor(paceSecs / 60);
+    const paceSec   = paceSecs % 60;
+    const pacePerKm = `${paceMin}:${paceSec.toString().padStart(2, '0')}/km`;
+
+    const cumulativeTimes = splits.map(s => s.cumulativeTime);
+
+    return {
+      totalTime:    totalMs,
+      numSplits,
+      splitTimes,
+      cumulativeTimes,
+      avgSplitTime,
+      bestSplit:    { time: splitTimes[bestIdx],  index: bestIdx  },
+      worstSplit:   { time: splitTimes[worstIdx], index: worstIdx },
+      stdDev,
+      cv,
+      firstHalfMs,
+      secondHalfMs,
+      fatigueIndex,
+      pacePerKm,
+      splitDistance: splitDist
+    };
+  }
+
+  evaluateRun(metrics) {
+    const { cv, fatigueIndex } = metrics;
+    const fi = fatigueIndex ?? 0;
+
+    let grade, gradeLabel;
+    if (cv < 2 && fi < 3) {
+      grade = 'A'; gradeLabel = 'Hervorragend';
+    } else if (cv < 4 && fi < 6) {
+      grade = 'B'; gradeLabel = 'Gut';
+    } else if (cv < 7 && fi < 10) {
+      grade = 'C'; gradeLabel = 'Solide';
+    } else {
+      grade = 'D'; gradeLabel = 'Verbesserungsbedarf';
+    }
+
+    let consistencyRating;
+    if (cv < 2)       consistencyRating = 'Sehr gleichmäßiges Lauftempo – exzellente Schrittfrequenz-Kontrolle.';
+    else if (cv < 4)  consistencyRating = 'Gutes Gleichgewicht – leichte Temposchwankungen, aber unter Kontrollgrenze.';
+    else if (cv < 7)  consistencyRating = 'Merkliche Tempounregelmäßigkeiten – Arbeit an der anaeroben Kapazität empfohlen.';
+    else              consistencyRating = 'Starke Temposchwankungen – Grundlagenausdauer und Laktat-Pufferung priorisieren.';
+
+    let fatigueRating;
+    if (fatigueIndex === null) {
+      fatigueRating = 'Zu wenige Splits für Ermüdungsanalyse.';
+    } else if (fi < 0) {
+      fatigueRating = 'Negativer Split – starke zweite Hälfte, ideale Rennverteilung!';
+    } else if (fi < 3) {
+      fatigueRating = 'Minimale Ermüdung – sehr kontrollierte Rennverteilung.';
+    } else if (fi < 6) {
+      fatigueRating = 'Leichte Ermüdung in der zweiten Hälfte, typisch für 800m.';
+    } else if (fi < 10) {
+      fatigueRating = 'Deutliche Ermüdung – Start möglicherweise zu schnell gewählt.';
+    } else {
+      fatigueRating = 'Starker Leistungseinbruch – anaerobe Kapazität ist der limitierende Faktor.';
+    }
+
+    // Build coaching comment based on actual data
+    const avgSec   = (metrics.avgSplitTime / 1000).toFixed(1);
+    const cvFixed  = cv.toFixed(1);
+    const fiFixed  = fi.toFixed(1);
+    const halfInfo = (metrics.firstHalfMs !== null)
+      ? ` Die erste Hälfte dauerte ${this.formatTime(metrics.firstHalfMs)}, die zweite ${this.formatTime(metrics.secondHalfMs)}.`
+      : '';
+
+    let paceChar;
+    if (fi < 0)       paceChar = 'Der negative Split zeigt eine ausgezeichnete Rennverteilung – das deutet auf gut trainierte aerobe Basis und effiziente Laktat-Clearance hin.';
+    else if (fi < 5)  paceChar = 'Die Rennverteilung ist nahezu ideal für 800m – die Energiesysteme wurden effizient eingesetzt.';
+    else if (fi < 10) paceChar = 'Die zweite Hälfte war langsamer als die erste, was auf beginnende Laktat-Akkumulation über der anaeroben Schwelle hinweist.';
+    else              paceChar = 'Der deutliche Leistungsabfall in der zweiten Hälfte signalisiert, dass der Start die Laktat-Toleranz überschritten hat – typisches Zeichen für zu schnellen Beginn.';
+
+    const coachComment =
+      `Variationskoeffizient von ${cvFixed}% (Ø ${avgSec}s/Split) – ${consistencyRating} ` +
+      `${halfInfo} ${paceChar} ` +
+      `Für 800m-Läufer ist eine Laktat-Konzentration von 12–20 mmol/L am Ende normal; ` +
+      `ein CV unter 3% deutet auf optimale anaerobe Kapazitätsauslastung hin.`;
+
+    const recommendations = [];
+    if (cv >= 4) recommendations.push('Tempoläufe: 6–8 × 200m mit exakter Zielvorgabe und Stoppuhr zur Gleichmäßigkeits-Schulung.');
+    if (fi > 6)  recommendations.push('Laktattoleranzt-Training: 3 × 600m @ 800m-Renntempo mit vollständiger Erholung, Fokus auf zweite Hälfte halten.');
+    if (grade === 'A' || grade === 'B') recommendations.push('Wettkampfsimulation: 1 × 800m als Testwettkampf mit Taktik-Analyse (Positionierung, Spurwechsel).');
+    else recommendations.push('Grundlagenausdauer: 2–3 × 1000m @ 70% VO₂max zur Verbesserung der aeroben Basis und Laktat-Pufferung.');
+    if (recommendations.length < 2) recommendations.push('Reaktionskraft: Stufensprünge und kurze Steigerungsläufe zur Verbesserung der neuromuskulären Koordination.');
+
+    return { grade, gradeLabel, consistencyRating, fatigueRating, coachComment, recommendations };
+  }
+
+  showResults(sharedData) {
+    // Remove any existing modal
+    const existing = document.getElementById('resultsModal');
+    if (existing) existing.remove();
+
+    // Enable Auswertung button for future re-opens
+    const auswBtn = document.getElementById('auswertungBtn');
+    if (auswBtn) auswBtn.disabled = false;
+
+    const metrics = this.calculateMetrics(sharedData || null);
+    if (!metrics) {
+      alert('Keine Lauf-Daten vorhanden.');
+      return;
+    }
+    const evaluation = this.evaluateRun(metrics);
+
+    const now   = new Date();
+    const dateStr = now.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+    const gradeColors = { A: '#22c55e', B: '#3b82f6', C: '#f97316', D: '#ef4444' };
+    const gradeColor  = gradeColors[evaluation.grade];
+
+    // ── Build modal element ──────────────────────────────────────────────
+    const modal = document.createElement('div');
+    modal.id = 'resultsModal';
+    modal.className = 'results-modal';
+    modal.style.cssText = [
+      'position:fixed', 'inset:0', 'z-index:9999',
+      'background:rgba(0,0,0,0.85)',
+      'display:flex', 'align-items:flex-start', 'justify-content:center',
+      'overflow-y:auto', 'padding:1rem'
+    ].join(';');
+
+    // Build split table rows using cumulativeTimes from metrics
+    const avgMs = metrics.avgSplitTime;
+    const splitRowsFinal = metrics.splitTimes.map((t, i) => {
+      const cum        = metrics.cumulativeTimes[i] || 0;
+      const delta      = t - avgMs;
+      const deltaStr   = (delta >= 0 ? '+' : '') + (delta / 1000).toFixed(2) + 's';
+      const deltaColor = delta < 0 ? '#22c55e' : delta > 0 ? '#ef4444' : 'inherit';
+      return `<tr>
+        <td>${i + 1}</td>
+        <td>${metrics.splitDistance}m</td>
+        <td>${this.formatTime(t)}</td>
+        <td>${this.formatTime(cum)}</td>
+        <td style="color:${deltaColor};font-weight:600">${deltaStr}</td>
+      </tr>`;
+    }).join('');
+
+    const halfHtml = (metrics.firstHalfMs !== null) ? `
+      <div class="metric-card">
+        <div class="metric-label">1. Hälfte</div>
+        <div class="metric-value">${this.formatTime(metrics.firstHalfMs)}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">2. Hälfte</div>
+        <div class="metric-value">${this.formatTime(metrics.secondHalfMs)}</div>
+      </div>` : '';
+
+    const recHtml = evaluation.recommendations.map(r => `<li>${r}</li>`).join('');
+
+    modal.innerHTML = `
+      <div class="results-container" style="
+        background:var(--bg-card,#1e2533);
+        border:1px solid var(--border,#2d3748);
+        border-radius:16px;
+        max-width:680px;
+        width:100%;
+        margin:auto;
+        overflow:hidden;
+        font-family:inherit;
+      ">
+        <!-- Header -->
+        <div style="
+          background:linear-gradient(135deg,#1a1f2e 0%,#0f172a 100%);
+          padding:1.5rem;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          border-bottom:1px solid var(--border,#2d3748);
+        ">
+          <div>
+            <h2 style="margin:0;font-size:1.4rem;color:#f1f5f9;">🏁 Lauf-Auswertung</h2>
+            <p style="margin:0.25rem 0 0;color:#94a3b8;font-size:0.85rem;">${dateStr} · ${timeStr}</p>
+          </div>
+          <button id="closeResultsBtn" style="
+            background:transparent;border:1px solid #475569;
+            color:#94a3b8;border-radius:8px;padding:0.4rem 0.8rem;
+            cursor:pointer;font-size:0.9rem;
+          ">✕ Schließen</button>
+        </div>
+
+        <!-- Hero -->
+        <div class="results-hero" style="
+          padding:2rem 1.5rem;
+          text-align:center;
+          border-bottom:1px solid var(--border,#2d3748);
+        ">
+          <div class="results-time" style="font-size:3rem;font-weight:700;color:#f1f5f9;letter-spacing:-1px;">
+            ${this.formatTime(metrics.totalTime)}
+          </div>
+          <div style="margin-top:0.5rem;color:#94a3b8;font-size:0.9rem;">
+            ${metrics.numSplits} Split${metrics.numSplits !== 1 ? 's' : ''} · ${metrics.pacePerKm}
+          </div>
+          <div class="results-grade" style="
+            display:inline-block;
+            margin-top:1rem;
+            padding:0.5rem 1.5rem;
+            border-radius:999px;
+            background:${gradeColor}22;
+            border:2px solid ${gradeColor};
+            color:${gradeColor};
+            font-size:1.1rem;
+            font-weight:700;
+          ">
+            ${evaluation.grade} – ${evaluation.gradeLabel}
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="metrics-grid" style="
+          display:grid;
+          grid-template-columns:repeat(2,1fr);
+          gap:1px;
+          background:var(--border,#2d3748);
+          border-bottom:1px solid var(--border,#2d3748);
+        ">
+          <div class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;">
+            <div class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Gleichmäßigkeit (CV)</div>
+            <div class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;">${metrics.cv.toFixed(1)}%</div>
+          </div>
+          <div class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;">
+            <div class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Ermüdungsindex</div>
+            <div class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;">${metrics.fatigueIndex !== null ? metrics.fatigueIndex.toFixed(1) + '%' : '–'}</div>
+          </div>
+          ${halfHtml.replace(/class="metric-card"/g, 'class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;"')
+            .replace(/class="metric-label"/g, 'class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;"')
+            .replace(/class="metric-value"/g, 'class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;"')}
+        </div>
+
+        <!-- Split Table -->
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);">
+          <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">Split-Übersicht</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.875rem;color:#cbd5e1;">
+              <thead>
+                <tr style="border-bottom:1px solid #2d3748;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;">
+                  <th style="padding:0.5rem 0.5rem;text-align:left;">#</th>
+                  <th style="padding:0.5rem 0.5rem;text-align:left;">Distanz</th>
+                  <th style="padding:0.5rem 0.5rem;text-align:left;">Zeit</th>
+                  <th style="padding:0.5rem 0.5rem;text-align:left;">Kumuliert</th>
+                  <th style="padding:0.5rem 0.5rem;text-align:left;">Δ Mittel</th>
+                </tr>
+              </thead>
+              <tbody>${splitRowsFinal}</tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Coach Evaluation -->
+        <div class="results-evaluation" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);">
+          <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">🎯 Trainer-Bewertung</h3>
+          <div class="coach-comment" style="
+            background:#0f172a;
+            border-left:3px solid ${gradeColor};
+            border-radius:0 8px 8px 0;
+            padding:1rem;
+            color:#cbd5e1;
+            font-size:0.9rem;
+            line-height:1.6;
+          ">${evaluation.coachComment}</div>
+          <h4 style="margin:1rem 0 0.5rem;color:#f1f5f9;font-size:0.9rem;">Trainingsempfehlungen</h4>
+          <ul class="recommendations-list" style="margin:0;padding-left:1.25rem;color:#94a3b8;font-size:0.875rem;line-height:1.7;">
+            ${recHtml}
+          </ul>
+        </div>
+
+        <!-- QR Code -->
+        <div class="results-qr" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);text-align:center;">
+          <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">📱 Ergebnis teilen</h3>
+          <div id="qrCodeDisplay" style="display:inline-block;background:#fff;padding:8px;border-radius:8px;"></div>
+          <p style="margin:0.5rem 0 0;color:#64748b;font-size:0.8rem;">QR-Code scannen → Ergebnis auf dem Smartphone öffnen</p>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="results-actions" style="
+          padding:1rem 1.5rem;
+          display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:flex-end;
+        ">
+          <button id="exportResultsBtn" style="
+            padding:0.6rem 1.2rem;
+            background:#1e3a5f;border:1px solid #3b82f6;
+            color:#93c5fd;border-radius:8px;cursor:pointer;font-size:0.875rem;
+          ">📥 Exportieren</button>
+          <button id="closeResultsBtn2" style="
+            padding:0.6rem 1.2rem;
+            background:#2d1515;border:1px solid #ef4444;
+            color:#fca5a5;border-radius:8px;cursor:pointer;font-size:0.875rem;
+          ">✕ Schließen</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Wire close buttons
+    const closeModal = () => modal.remove();
+    modal.querySelector('#closeResultsBtn').addEventListener('click', closeModal);
+    modal.querySelector('#closeResultsBtn2').addEventListener('click', closeModal);
+    modal.querySelector('#exportResultsBtn').addEventListener('click', () => this.exportData());
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    // Generate QR code
+    this.generateQRCode(metrics);
+  }
+
+  generateQRCode(metrics) {
+    const payload = {
+      t:  metrics.totalTime,
+      d:  new Date().toISOString().slice(0, 10),
+      sp: metrics.splitTimes.map(Math.round),
+      sd: metrics.splitDistance
+    };
+
+    const json    = JSON.stringify(payload);
+    const encoded = btoa(unescape(encodeURIComponent(json)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    const url     = `https://800m.vercel.app/#run=${encoded}`;
+
+    const display = document.getElementById('qrCodeDisplay');
+    if (!display) return;
+    display.innerHTML = '';
+
+    if (typeof qrcode === 'undefined') {
+      display.textContent = url;
+      display.style.wordBreak = 'break-all';
+      display.style.fontSize  = '0.75rem';
+      display.style.color     = '#000';
+      return;
+    }
+
+    try {
+      const qr = qrcode(0, 'M');
+      qr.addData(url);
+      qr.make();
+      display.innerHTML = qr.createImgTag(4, 0);
+    } catch (e) {
+      // URL too long for type 0 — try lower type
+      try {
+        const qr = qrcode(4, 'M');
+        qr.addData(url);
+        qr.make();
+        display.innerHTML = qr.createImgTag(3, 0);
+      } catch (e2) {
+        display.textContent = url;
+        display.style.wordBreak = 'break-all';
+        display.style.fontSize  = '0.75rem';
+        display.style.color     = '#000';
+      }
+    }
+  }
+
+  decodeSharedRun() {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#run=')) return;
+
+    try {
+      const encoded = hash.slice(5);
+      // base64url → base64
+      const b64  = encoded.replace(/-/g, '+').replace(/_/g, '/');
+      const pad  = b64.length % 4 === 0 ? '' : '='.repeat(4 - b64.length % 4);
+      const json = decodeURIComponent(escape(atob(b64 + pad)));
+      const data = JSON.parse(json);
+
+      // Reconstruct splits array compatible with calculateMetrics
+      const reconstructed = {
+        totalTime:     data.t,
+        splitDistance: data.sd || 100,
+        splits:        data.sp.map((ms, i) => ({
+          number:         i + 1,
+          distance:       data.sd || 100,
+          cumulativeTime: data.sp.slice(0, i + 1).reduce((a, b) => a + b, 0),
+          time:           ms
+        }))
+      };
+
+      // Override instance splits so showResults() can reference them
+      this.elapsedTime = reconstructed.totalTime;
+      this.splits      = reconstructed.splits;
+
+      // Show after DOM settles
+      setTimeout(() => this.showResults(reconstructed), 300);
+    } catch (e) {
+      console.warn('Shared run decode failed:', e);
     }
   }
 }
