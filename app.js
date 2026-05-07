@@ -453,6 +453,21 @@ function updateDisplay() {
 
   appState.currentSplits = result;
 
+  // Export target splits for stopwatch deviation display
+  window.calculatorTarget = {
+    totalTime: appState.finishTime,
+    totalTimeMs: appState.finishTime * 1000,
+    splits: result.splits.map(s => s * 1000), // seconds → ms, array of 8 values
+    strategy: appState.strategyId,
+    strategyName: STRATEGY_CONFIG[appState.strategyId].name,
+    splitDistance: 100
+  };
+
+  // Notify stopwatch if it's listening
+  if (typeof window.onCalculatorTargetUpdate === 'function') {
+    window.onCalculatorTargetUpdate(window.calculatorTarget);
+  }
+
   // Update all UI components
   document.getElementById('finishTimeLabel').textContent = formatTimeDisplay(appState.finishTime);
   updateSplitsTable(result);

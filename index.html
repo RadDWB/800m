@@ -19,11 +19,11 @@
       </div>
       <div class="header-controls">
         <div class="tab-navigation">
-          <button class="tab-btn active" data-tab="calculator" title="Pacing Calculator">📊 Calculator</button>
-          <button class="tab-btn" data-tab="stopwatch" title="Training Stopwatch">⏱️ Stopwatch</button>
-          <button class="tab-btn" data-tab="manual" title="Handbuch">📖 Handbuch</button>
+          <button class="tab-btn active" data-tab="calculator" title="Pacing Calculator"><svg class="icon icon-md" viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="7" width="4" height="14"/><rect x="17" y="3" width="4" height="18"/></svg>Calculator</button>
+          <button class="tab-btn" data-tab="stopwatch" title="Training Stopwatch"><svg class="icon icon-md" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M5.1 3.9 4 5M18.9 3.9 20 5"/><line x1="9" y1="2" x2="15" y2="2"/></svg>Stopwatch</button>
+          <button class="tab-btn" data-tab="manual" title="Handbuch"><svg class="icon icon-md" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Handbuch</button>
         </div>
-        <button id="themeToggle" class="theme-toggle" aria-label="Theme umschalten" title="Dark/Light Mode">🌙</button>
+        <button id="themeToggle" class="theme-toggle" aria-label="Theme umschalten" title="Dark/Light Mode"><svg class="icon icon-md" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       </div>
     </header>
 
@@ -65,23 +65,23 @@
             <h2 class="control-label">Strategie</h2>
             <div class="strategy-buttons">
               <button class="strategy-btn" data-strategy="1" title="Schnell starten, Laktat-Einbruch am Ende">
-                <span class="strategy-emoji">⚡</span>
+                <span class="strategy-emoji"><svg class="icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg></span>
                 <span class="strategy-name">Aggressiv</span>
               </button>
               <button class="strategy-btn" data-strategy="2" title="Langsam starten, schneller Finish">
-                <span class="strategy-emoji">🎯</span>
+                <span class="strategy-emoji"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></span>
                 <span class="strategy-name">Abwartend</span>
               </button>
               <button class="strategy-btn active" data-strategy="3" title="Konstante Geschwindigkeit über 800m">
-                <span class="strategy-emoji">➡️</span>
+                <span class="strategy-emoji"><svg class="icon" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
                 <span class="strategy-name">Gleichmäßig</span>
               </button>
               <button class="strategy-btn" data-strategy="4" title="Taktische Kicks mit Recoveries">
-                <span class="strategy-emoji">🎲</span>
+                <span class="strategy-emoji"><svg class="icon" viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg></span>
                 <span class="strategy-name">Taktisch</span>
               </button>
               <button class="strategy-btn" data-strategy="5" title="Stetiger Anstieg zum Finish">
-                <span class="strategy-emoji">📈</span>
+                <span class="strategy-emoji"><svg class="icon" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
                 <span class="strategy-name">Dynamic</span>
               </button>
             </div>
@@ -91,8 +91,8 @@
           <section class="control-group">
             <h2 class="control-label">Geschlecht</h2>
             <div class="gender-buttons">
-              <button class="gender-btn active" data-gender="m" title="Männlich">♂️ Männlich</button>
-              <button class="gender-btn" data-gender="w" title="Weiblich">♀️ Weiblich</button>
+              <button class="gender-btn active" data-gender="m" title="Männlich"><svg class="icon" viewBox="0 0 24 24"><circle cx="10" cy="14" r="5"/><line x1="19" y1="5" x2="14.14" y2="9.86"/><polyline points="15 5 19 5 19 9"/></svg> Männlich</button>
+              <button class="gender-btn" data-gender="w" title="Weiblich"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="21"/><line x1="9" y1="17" x2="15" y2="17"/></svg> Weiblich</button>
             </div>
           </section>
 
@@ -141,7 +141,7 @@
         <section class="content">
           <!-- Split-Tabelle -->
           <div class="card">
-            <h2>100m-Splits & Zwischenzeiteneiten</h2>
+            <h2>100m-Splits & Zwischenzeiten</h2>
             <div class="table-container">
               <table class="splits-table">
                 <thead>
@@ -233,8 +233,8 @@
             <div class="card-header">
               <h2>Blutlaktat-Werte (mmol/L)</h2>
               <div class="card-buttons">
-                <button id="printBtn" class="print-btn" title="Tabelle ausdrucken">🖨️ Drucken</button>
-                <button id="pdfBtn" class="print-btn" title="Als PDF speichern">📥 PDF</button>
+                <button id="printBtn" class="print-btn" title="Tabelle ausdrucken"><svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Drucken</button>
+                <button id="pdfBtn" class="print-btn" title="Als PDF speichern"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> PDF</button>
               </div>
             </div>
             <div id="lactateTableContainer" class="table-container">
@@ -287,121 +287,136 @@
       <!-- TAB 2: STOPWATCH / TRAINER -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <div id="stopwatch-tab" class="tab-content">
-        <section class="stopwatch-section">
+  <section class="sw-screen">
 
-          <!-- Main Stopwatch Display -->
-          <div class="stopwatch-display">
-            <div class="stopwatch-time" id="stopwatchDisplay">0:00.00</div>
-            <div class="stopwatch-controls">
-              <button id="stopwatchStart" class="stopwatch-btn start-btn" title="Start Training">▶️ Start</button>
-              <button id="stopwatchStop" class="stopwatch-btn stop-btn" disabled title="Stop">⏸️ Stop</button>
-              <button id="stopwatchReset" class="stopwatch-btn reset-btn" title="Reset">🔄 Reset</button>
-            </div>
-          </div>
+    <!-- ① TARGET BANNER (shown when calculator target is set) -->
+    <div class="sw-target-bar" id="swTargetBar" style="display:none">
+      <span class="sw-target-label">Ziel:</span>
+      <span class="sw-target-time" id="swTargetTime">2:30</span>
+      <span class="sw-target-strategy" id="swTargetStrategy">Gleichmäßig</span>
+      <button class="sw-target-clear" id="swTargetClear" title="Ziel entfernen">✕</button>
+    </div>
 
-          <!-- Split Distance Selector -->
-          <div class="split-selector">
-            <h3>Split Measurement</h3>
-            <div class="distance-buttons">
-              <button class="distance-btn active" data-distance="100">100m</button>
-              <button class="distance-btn" data-distance="200">200m</button>
-              <button class="distance-btn" data-distance="400">400m</button>
-            </div>
-          </div>
+    <!-- ② MAIN TIMER -->
+    <div class="sw-timer-block">
+      <div class="sw-time" id="stopwatchDisplay">0:00.00</div>
+      <!-- split progress: "Split 3/8 — Ziel: 0:18.75" -->
+      <div class="sw-split-progress" id="swSplitProgress"></div>
+    </div>
 
-          <!-- Quick Split Buttons -->
-          <div class="split-buttons">
-            <button id="splitBtn" class="split-btn" disabled title="Record Split">📍 Split</button>
-            <button id="lapBtn" class="lap-btn" disabled title="Lap">🏁 Lap</button>
-          </div>
+    <!-- ③ LIVE DEVIATION (shown after each split) -->
+    <div class="sw-deviation" id="swDeviation" style="display:none">
+      <span class="sw-dev-label">Split <span id="swDevSplitNum">1</span>:</span>
+      <span class="sw-dev-value" id="swDevValue">+0.3s</span>
+      <span class="sw-dev-hint" id="swDevHint">zu langsam</span>
+    </div>
 
-          <!-- Split Results -->
-          <div class="card splits-card">
-            <h2>Split Times</h2>
-            <div class="table-container">
-              <table class="splits-result-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Distance</th>
-                    <th>Time</th>
-                    <th>Tempo</th>
-                    <th>vs. Target</th>
-                  </tr>
-                </thead>
-                <tbody id="splitsResultBody">
-                  <!-- Wird dynamisch gefüllt -->
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <!-- ④ PRIMARY CONTROLS — huge, touch-friendly -->
+    <div class="sw-controls-main">
+      <button id="stopwatchStart" class="sw-btn sw-btn-start"><svg class="icon icon-lg icon-filled" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21" fill="currentColor" stroke="none"/></svg> Start</button>
+      <button id="stopwatchStop"  class="sw-btn sw-btn-stop"  disabled><svg class="icon icon-lg icon-filled" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor" stroke="none"/><rect x="14" y="4" width="4" height="16" fill="currentColor" stroke="none"/></svg> Stop</button>
+    </div>
 
-          <!-- Current Lap Info -->
-          <div class="card lap-info-card">
-            <h2>Current Progress</h2>
-            <div class="lap-info">
-              <div class="info-item">
-                <span class="info-label">Total Time:</span>
-                <span class="info-value" id="totalTime">0:00.00</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Current Lap:</span>
-                <span class="info-value" id="currentLap">0:00.00</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Splits Recorded:</span>
-                <span class="info-value" id="splitsCount">0</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Avg Tempo:</span>
-                <span class="info-value" id="avgTempo">-:--</span>
-              </div>
-            </div>
-          </div>
+    <!-- ⑤ SPLIT / LAP ROW -->
+    <div class="sw-controls-secondary">
+      <button id="splitBtn" class="sw-btn-sec sw-btn-split" disabled><svg class="icon" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg> Split</button>
+      <button id="lapBtn"   class="sw-btn-sec sw-btn-lap"   disabled><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="m9 8 2 2 4-4"/><path d="M6.5 20h11M12 14v6"/></svg> Lap</button>
+      <button id="stopwatchReset" class="sw-btn-sec sw-btn-reset"><svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5L1 10"/></svg> Reset</button>
+      <button id="auswertungBtn" class="sw-btn-sec sw-btn-auswertung" disabled><svg class="icon icon-md" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></button>
+    </div>
 
-          <!-- Audio Feedback Toggle -->
-          <div class="card settings-card">
-            <h2>Settings</h2>
-            <div class="settings-group">
-              <label class="toggle-label">
-                <input type="checkbox" id="audioFeedback" checked>
-                <span>🔊 Audio Feedback on Splits</span>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" id="vibration" checked>
-                <span>📳 Vibration Feedback</span>
-              </label>
-              <label class="toggle-label">
-                <input type="checkbox" id="keepScreen" checked>
-                <span>💡 Keep Screen On</span>
-              </label>
-            </div>
-            <button id="exportData" class="export-btn" title="Export Results">📤 Export Data</button>
-            <button id="clearData" class="clear-btn" title="Clear All Data">🗑️ Clear History</button>
-          </div>
-
-          <!-- Historical Data -->
-          <div class="card history-card">
-            <h2>Training History</h2>
-            <div class="table-container">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Total Time</th>
-                    <th>Splits</th>
-                    <th>Best Split</th>
-                  </tr>
-                </thead>
-                <tbody id="historyBody">
-                  <!-- Wird dynamisch gefüllt -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </section>
+    <!-- ⑥ SPLIT DISTANCE SELECTOR (compact) -->
+    <div class="sw-dist-row">
+      <span class="sw-dist-label">Split-Distanz:</span>
+      <div class="sw-dist-buttons">
+        <button class="sw-dist-btn active" data-distance="100">100m</button>
+        <button class="sw-dist-btn" data-distance="200">200m</button>
+        <button class="sw-dist-btn" data-distance="400">400m</button>
       </div>
+    </div>
+
+    <!-- ⑦ SPLITS LIVE TABLE (compact, scrollable) -->
+    <div class="sw-splits-live card" id="swSplitsCard">
+      <div class="sw-splits-header">
+        <h3>Splits</h3>
+        <span class="sw-splits-summary" id="swSplitsSummary"></span>
+      </div>
+      <div class="table-container">
+        <table class="sw-splits-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Dist</th>
+              <th>Zeit</th>
+              <th>Kum.</th>
+              <th>Δ Ziel</th>
+            </tr>
+          </thead>
+          <tbody id="splitsResultBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ⑧ CURRENT PROGRESS (compact 4-value row) -->
+    <div class="sw-progress-row card">
+      <div class="sw-prog-item">
+        <div class="sw-prog-label">Gesamt</div>
+        <div class="sw-prog-value" id="totalTime">0:00.00</div>
+      </div>
+      <div class="sw-prog-item">
+        <div class="sw-prog-label">Runde</div>
+        <div class="sw-prog-value" id="currentLap">0:00.00</div>
+      </div>
+      <div class="sw-prog-item">
+        <div class="sw-prog-label">Splits</div>
+        <div class="sw-prog-value" id="splitsCount">0</div>
+      </div>
+      <div class="sw-prog-item">
+        <div class="sw-prog-label">Ø Tempo</div>
+        <div class="sw-prog-value" id="avgTempo">—</div>
+      </div>
+    </div>
+
+    <!-- ⑨ SETTINGS COLLAPSIBLE -->
+    <details class="sw-settings-panel card">
+      <summary class="sw-settings-toggle"><svg class="icon" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> Einstellungen &amp; Export</summary>
+      <div class="sw-settings-body">
+        <div class="settings-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="audioFeedback" checked>
+            <span><svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg> Audio bei Split</span>
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="vibration" checked>
+            <span><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="1" y1="10" x2="1" y2="14"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Vibration</span>
+          </label>
+          <label class="toggle-label">
+            <input type="checkbox" id="keepScreen" checked>
+            <span><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Screen aktiv halten</span>
+          </label>
+        </div>
+        <div class="sw-settings-btns">
+          <button id="exportData" class="export-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Export</button>
+          <button id="clearData" class="clear-btn"><svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> Verlauf löschen</button>
+        </div>
+      </div>
+    </details>
+
+    <!-- ⑩ HISTORY COLLAPSIBLE -->
+    <details class="sw-history-panel card">
+      <summary class="sw-history-toggle"><svg class="icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg> Trainings-Verlauf</summary>
+      <div class="table-container">
+        <table class="history-table">
+          <thead>
+            <tr><th>Datum</th><th>Zeit</th><th>Splits</th><th>Best</th></tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </details>
+
+  </section>
+</div>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
       <!-- TAB 3: HANDBUCH -->
@@ -425,21 +440,31 @@
             <h3>Split-Distanz wählen</h3>
             <p>Über die Schaltflächen <strong>100 m – 200 m – 400 m</strong> wird festgelegt, welche Streckenabschnitte aufgezeichnet werden. Für die 800-m-Analyse empfiehlt sich <strong>100 m</strong>: Mit acht gleichmäßigen Abschnitten lässt sich der Geschwindigkeitsverlauf feingranular erfassen, taktische Kicks und Einbrüche werden sichtbar. Die 200-m-Option eignet sich für Wettkampfsituationen, wenn das manuelle Stoppen auf engem Raum schwierig ist. Die 400-m-Einstellung liefert den klassischen Halbzeit-Split.</p>
 
+            <h3>Ziel-Banner & Live-Abweichung</h3>
+            <p>Wenn im <strong>Calculator-Tab</strong> eine Zielzeit und Strategie eingestellt ist, überträgt die App diese Werte automatisch in die Stoppuhr. Ein farbiger Banner am oberen Rand zeigt die Zielzeit und gewählte Strategie an – z. B. <em>Ziel: 2:30 · Gleichmäßig</em>. Über das ✕-Symbol kann das Ziel für die aktuelle Session deaktiviert werden.</p>
+            <p>Nach jedem aufgezeichneten Split erscheint kurz die <strong>Live-Abweichung</strong> gegenüber dem Solltempo der gewählten Strategie:</p>
+            <ul>
+              <li><span style="color:var(--strategy-3)">Grün</span> = Split war schneller als der Ziel-Split – der Athlet liegt im Plan oder ist voraus.</li>
+              <li><span style="color:#ef4444">Rot</span> = Split war langsamer – der Athlet ist im Rückstand.</li>
+            </ul>
+            <p>Zusätzlich zeigt die Spalte <strong>Δ Ziel</strong> in der Split-Tabelle für jeden einzelnen Abschnitt die kumulierte Abweichung in Sekunden an. So ist auf einen Blick erkennbar, bei welchem Split das Tempo von der Strategie abgewichen ist.</p>
+            <p>Oberhalb der Hauptuhr zeigt eine Fortschrittszeile den aktuellen Stand: <em>Split 3/8 – Ziel: 0:18.75</em> – damit weiß der Trainer jederzeit, wie weit der Athlet noch von der nächsten Split-Marke entfernt ist.</p>
+
             <h3>Split-Button vs. Lap-Button</h3>
             <dl>
-              <dt>📍 Split</dt>
+              <dt><svg class="icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Split</dt>
               <dd>Erfasst eine <strong>Zwischenzeit</strong> für den aktuellen Streckenabschnitt gemäß gewählter Distanz. Die Uhr läuft unverändert weiter. Jeder Split-Eintrag zeigt Zeit, Tempo und den Vergleich zur Zielzeit. Ideal: nach jedem 100-m-Abschnitt drücken, während der Athlet an der Messperson vorbeiläuft.</dd>
-              <dt>🏁 Lap</dt>
+              <dt><svg class="icon" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg> Lap</dt>
               <dd>Erfasst eine <strong>vollständige Runde</strong> und setzt den internen Runden-Zähler zurück. Beim 800-m-Lauf entspricht ein Lap einer 400-m-Runde auf der Bahn. Die kumulierte Gesamtzeit läuft weiter, der Runden-Timer beginnt von vorn. Geeignet, wenn der gesamte Lauf über mehrere 400-m-Runden beobachtet werden soll.</dd>
             </dl>
 
             <h3>Einstellungen</h3>
             <dl>
-              <dt>🔊 Audio-Feedback</dt>
+              <dt><svg class="icon" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Audio-Feedback</dt>
               <dd>Bei jedem gespeicherten Split ertönt ein kurzer Signalton. Dies ist besonders nützlich, wenn die Augen auf den Athleten gerichtet sind und kein Blick aufs Display möglich ist. Deaktivierbar für lautlose Umgebungen (z. B. Schulsporthalle).</dd>
-              <dt>📳 Vibrations-Feedback</dt>
+              <dt><svg class="icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><line x1="1" y1="10" x2="1" y2="14"/><line x1="23" y1="10" x2="23" y2="14"/></svg> Vibrations-Feedback</dt>
               <dd>Ergänzend zum Audio-Signal vibriert das Gerät beim Split. Auf Geräten ohne Vibrationsmotor (Desktop, iPad) ohne Funktion. Empfohlen in lärm­reichen Wettkampf­umgebungen.</dd>
-              <dt>💡 Screen-Lock verhindern</dt>
+              <dt><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Screen-Lock verhindern</dt>
               <dd>Aktiviert die Wake-Lock-API, sodass der Bildschirm während aktiver Zeitmessung nicht dunkel wird. Erfordert eine HTTPS-Verbindung. Falls der Browser die API nicht unterstützt, erscheint eine Hinweismeldung.</dd>
             </dl>
 
@@ -447,7 +472,7 @@
             <p>Über <strong>Export Data</strong> werden alle gespeicherten Splits der aktuellen Session als JSON-Datei heruntergeladen. Die Datei enthält Zeitstempel, Distanzen, Splits in Millisekunden sowie das berechnete Tempo (min/km). Die Daten können in Tabellenprogramme (Excel, Google Sheets) importiert oder für eigene Auswertungsskripte genutzt werden.</p>
 
             <div class="tip-box">
-              <strong>💡 Praxis-Tipp:</strong> Stelle das Gerät beim Wettkampf quer (Landscape-Modus) auf ein Stativ oder Klemmbrett, damit Start und Split nebeneinander gut erreichbar sind. Split mit dem Daumen, Lap mit dem Zeigefinger.
+              <strong><svg class="icon" viewBox="0 0 24 24"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Praxis-Tipp:</strong> Stelle das Gerät beim Wettkampf quer (Landscape-Modus) auf ein Stativ oder Klemmbrett, damit Start und Split nebeneinander gut erreichbar sind. Split mit dem Daumen, Lap mit dem Zeigefinger.
             </div>
           </div>
 
@@ -553,7 +578,7 @@
             </table>
 
             <div class="tip-box">
-              <strong>💡 Wichtiger Hinweis:</strong> Note A im Training bedeutet <em>nicht</em> automatisch die beste Wettkampfzeit. Taktische Variationen – etwa ein bewusster Frontalangriff in Rennen mit taktischem Charakter oder ein aggressiver Endspurt aus Negativsplit-Ausgangslage – können leistungssteigernde Strategien sein, auch wenn sie CV und Ermüdungsindex rechnerisch verschlechtern.
+              <strong><svg class="icon" viewBox="0 0 24 24"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Wichtiger Hinweis:</strong> Note A im Training bedeutet <em>nicht</em> automatisch die beste Wettkampfzeit. Taktische Variationen – etwa ein bewusster Frontalangriff in Rennen mit taktischem Charakter oder ein aggressiver Endspurt aus Negativsplit-Ausgangslage – können leistungssteigernde Strategien sein, auch wenn sie CV und Ermüdungsindex rechnerisch verschlechtern.
             </div>
 
             <h3>Halbzeitvergleich (400m vs. 400m)</h3>
@@ -586,7 +611,7 @@
             <p>Die 800m-Trainer-App arbeitet vollständig <strong>clientseitig</strong>. Es werden keine Daten an einen Server gesendet, kein Nutzer-Account wird benötigt, und kein Tracking findet statt. Die Split-Daten werden im URL-Hash als Base64-kodierter JSON-String übermittelt. Da Hash-Fragments nie in HTTP-Requests enthalten sind, werden die Laufdaten auch bei Verwendung von Proxy-Servern oder CDNs nicht protokolliert. Trainer können die Auswertung bedenkenlos mit Athleten teilen, ohne datenschutzrechtliche Einwilligungspflichten im schulischen oder vereinssportlichen Kontext auszulösen.</p>
 
             <div class="tip-box">
-              <strong>💡 Tipp für Mannschaftstraining:</strong> Zeige den QR-Code nach dem Lauf direkt auf dem Trainingsgerät an. Alle Athleten können gleichzeitig scannen – der Link öffnet bei jedem dieselbe Auswertung.
+              <strong><svg class="icon" viewBox="0 0 24 24"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Tipp für Mannschaftstraining:</strong> Zeige den QR-Code nach dem Lauf direkt auf dem Trainingsgerät an. Alle Athleten können gleichzeitig scannen – der Link öffnet bei jedem dieselbe Auswertung.
             </div>
           </div>
 
@@ -663,7 +688,7 @@
             <p>Über 6–10 Sessions zeigt sich: Sinkt der CV bei gleichbleibender oder besserer Gesamtzeit, verbessert sich die Pacing-Kompetenz nachweisbar. Sinkt der Ermüdungsindex gegen null oder in den negativen Bereich, schlägt das Ausdauertraining durch. Diese Längsschnitt­daten sind wertvoller als jede Einzelmessung und liefern eine evidenzbasierte Grundlage für Trainingsplan-Anpassungen.</p>
 
             <div class="tip-box">
-              <strong>💡 Digitaler Trainingsnachweis:</strong> Die exportierten Daten und QR-Code-Links können für schulische Leistungsdokumentationen oder Vereinsberichte verwendet werden – ohne Datenschutzbedenken, da keine personenbezogenen Daten in der App gespeichert werden.
+              <strong><svg class="icon" viewBox="0 0 24 24"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> Digitaler Trainingsnachweis:</strong> Die exportierten Daten und QR-Code-Links können für schulische Leistungsdokumentationen oder Vereinsberichte verwendet werden – ohne Datenschutzbedenken, da keine personenbezogenen Daten in der App gespeichert werden.
             </div>
           </div>
 

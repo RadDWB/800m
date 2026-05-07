@@ -28,6 +28,9 @@ class StopwatchApp {
     // Calculator reference
     this.calculator = null;
 
+    // Target from calculator tab
+    this.calculatorTarget = null;
+
     this.init();
   }
 
@@ -38,6 +41,11 @@ class StopwatchApp {
     this.renderHistory();
     this.injectAuswertungButton();
     this.decodeSharedRun();
+    this.loadCalculatorTarget();
+    window.onCalculatorTargetUpdate = (target) => {
+      this.calculatorTarget = target;
+      this.updateTargetBanner();
+    };
   }
 
   cacheElements() {
@@ -48,7 +56,7 @@ class StopwatchApp {
     this.resetBtn = document.getElementById('stopwatchReset');
 
     // Distance selector
-    this.distanceButtons = document.querySelectorAll('.distance-btn');
+    this.distanceButtons = document.querySelectorAll('.sw-dist-btn');
     this.splitBtn = document.getElementById('splitBtn');
     this.lapBtn = document.getElementById('lapBtn');
 
@@ -197,6 +205,11 @@ class StopwatchApp {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
     }
+
+    const devEl = document.getElementById('swDeviation');
+    if (devEl) devEl.style.display = 'none';
+    const progEl = document.getElementById('swSplitProgress');
+    if (progEl) progEl.textContent = '';
   }
 
   animate() {
@@ -225,6 +238,8 @@ class StopwatchApp {
 
     this.splits.push(split);
     this.updateSplitTable();
+    this.showSplitDeviation(this.splits.length - 1);
+    this.updateSplitProgress();
     this.provideFeedback();
     this.updateStats();
   }
@@ -250,22 +265,119 @@ class StopwatchApp {
   updateSplitTable() {
     this.splitsResultBody.innerHTML = '';
 
-    this.splits.forEach(split => {
+    this.splits.forEach((split, i) => {
       const row = document.createElement('tr');
-      const tempoMs = split.cumulativeTime / (split.distance / 100);
-      const tempo = this.formatTime(tempoMs);
-      const pctTime = ((split.cumulativeTime / this.elapsedTime) * 100).toFixed(1);
+      const cumTime = split.cumulativeTime;
+      const prevCum = i === 0 ? 0 : this.splits[i - 1].cumulativeTime;
+      const splitDuration = cumTime - prevCum;
+
+      let deviationCell = '—';
+      if (this.calculatorTarget && i < this.calculatorTarget.splits.length) {
+        const targetMs = this.calculatorTarget.splits[i];
+        const diffMs = splitDuration - targetMs;
+        const diffSec = (diffMs / 1000).toFixed(2);
+        const cls = Math.abs(diffMs) < 200 ? 'sw-split-exact' : (diffMs > 0 ? 'sw-split-behind' : 'sw-split-ahead');
+        const sign = diffMs > 0 ? '+' : '';
+        deviationCell = `<span class="${cls}">${sign}${diffSec}s</span>`;
+      }
 
       row.innerHTML = `
         <td>${split.number}</td>
         <td>${split.distance}m</td>
-        <td>${this.formatTime(split.time)}</td>
-        <td>${tempo}/100m</td>
-        <td>${pctTime}%</td>
+        <td>${this.formatTime(splitDuration)}</td>
+        <td>${this.formatTime(cumTime)}</td>
+        <td>${deviationCell}</td>
       `;
 
       this.splitsResultBody.appendChild(row);
     });
+  }
+
+  loadCalculatorTarget() {
+    if (window.calculatorTarget) {
+      this.calculatorTarget = window.calculatorTarget;
+      this.updateTargetBanner();
+    }
+  }
+
+  updateTargetBanner() {
+    const bar = document.getElementById('swTargetBar');
+    if (!bar) return;
+
+    if (!this.calculatorTarget) {
+      bar.style.display = 'none';
+      return;
+    }
+
+    bar.style.display = 'flex';
+
+    const timeEl = document.getElementById('swTargetTime');
+    if (timeEl) timeEl.textContent = this.formatTime(this.calculatorTarget.totalTimeMs);
+
+    const stratEl = document.getElementById('swTargetStrategy');
+    if (stratEl) stratEl.textContent = this.calculatorTarget.strategyName;
+
+    const clearBtn = document.getElementById('swTargetClear');
+    if (clearBtn) {
+      // Remove old listener by replacing with clone
+      const newClear = clearBtn.cloneNode(true);
+      clearBtn.parentNode.replaceChild(newClear, clearBtn);
+      newClear.addEventListener('click', () => {
+        this.calculatorTarget = null;
+        this.updateTargetBanner();
+        this.updateSplitTable();
+      });
+    }
+  }
+
+  showSplitDeviation(splitIndex) {
+    const devEl = document.getElementById('swDeviation');
+    const numEl = document.getElementById('swDevSplitNum');
+    const valEl = document.getElementById('swDevValue');
+    const hintEl = document.getElementById('swDevHint');
+    if (!devEl) return;
+
+    if (!this.calculatorTarget || splitIndex >= this.calculatorTarget.splits.length) {
+      devEl.style.display = 'none';
+      return;
+    }
+
+    const targetMs = this.calculatorTarget.splits[splitIndex];
+    const actualMs = splitIndex === 0
+      ? this.splits[0].cumulativeTime
+      : this.splits[splitIndex].cumulativeTime - this.splits[splitIndex - 1].cumulativeTime;
+    const diffMs = actualMs - targetMs;
+    const diffSec = (diffMs / 1000).toFixed(2);
+    const absDiffSec = Math.abs(diffSec);
+
+    numEl.textContent = splitIndex + 1;
+
+    if (Math.abs(diffMs) < 200) {
+      valEl.textContent = '±' + absDiffSec + 's';
+      hintEl.textContent = 'perfekt';
+      devEl.className = 'sw-deviation exact';
+    } else if (diffMs > 0) {
+      valEl.textContent = '+' + absDiffSec + 's';
+      hintEl.textContent = 'zu langsam';
+      devEl.className = 'sw-deviation behind';
+    } else {
+      valEl.textContent = '-' + absDiffSec + 's';
+      hintEl.textContent = 'zu schnell';
+      devEl.className = 'sw-deviation ahead';
+    }
+    devEl.style.display = 'flex';
+  }
+
+  updateSplitProgress() {
+    const el = document.getElementById('swSplitProgress');
+    if (!el) return;
+    const nextIdx = this.splits.length;
+    if (!this.calculatorTarget || nextIdx >= this.calculatorTarget.splits.length) {
+      el.textContent = this.calculatorTarget ? `${nextIdx}/${this.calculatorTarget.splits.length} Splits` : '';
+      return;
+    }
+    const targetMs = this.calculatorTarget.splits[nextIdx];
+    el.textContent = `Split ${nextIdx + 1}/${this.calculatorTarget.splits.length}  ▸  Ziel: ${this.formatTime(targetMs)}`;
   }
 
   updateStats() {
@@ -456,9 +568,15 @@ class StopwatchApp {
   // ─── FEATURE 1: Post-Run Results Engine ──────────────────────────────
 
   injectAuswertungButton() {
-    // Insert "Auswertung" button next to Reset in the DOM
+    // If button already exists in HTML, just wire the click event
+    const existing = document.getElementById('auswertungBtn');
+    if (existing) {
+      existing.addEventListener('click', () => this.showResults());
+      return;
+    }
+    // Fallback: insert button next to Reset in the DOM
     const resetBtn = document.getElementById('stopwatchReset');
-    if (!resetBtn || document.getElementById('auswertungBtn')) return;
+    if (!resetBtn) return;
     const btn = document.createElement('button');
     btn.id = 'auswertungBtn';
     btn.className = 'stopwatch-btn auswertung-btn';
