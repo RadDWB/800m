@@ -89,9 +89,11 @@ class StopwatchApp {
 
     this.distanceButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
+        const selectedButton = e.currentTarget;
         this.distanceButtons.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        this.currentSplitDistance = parseInt(e.target.dataset.distance);
+        selectedButton.classList.add('active');
+        this.currentSplitDistance = parseInt(selectedButton.dataset.distance, 10);
+        this.updateSplitProgress();
       });
     });
 
@@ -272,8 +274,9 @@ class StopwatchApp {
       const splitDuration = cumTime - prevCum;
 
       let deviationCell = '—';
-      if (this.calculatorTarget && i < this.calculatorTarget.splits.length) {
-        const targetMs = this.calculatorTarget.splits[i];
+      const targetSplits = this.getTargetSplitsForCurrentDistance();
+      if (targetSplits && i < targetSplits.length) {
+        const targetMs = targetSplits[i];
         const diffMs = splitDuration - targetMs;
         const diffSec = (diffMs / 1000).toFixed(2);
         const cls = Math.abs(diffMs) < 200 ? 'sw-split-exact' : (diffMs > 0 ? 'sw-split-behind' : 'sw-split-ahead');
@@ -330,6 +333,22 @@ class StopwatchApp {
     }
   }
 
+  getTargetSplitsForCurrentDistance() {
+    if (!this.calculatorTarget || !Array.isArray(this.calculatorTarget.splits)) return null;
+
+    const groupSize = Math.max(1, Math.round(this.currentSplitDistance / 100));
+    if (groupSize === 1) return this.calculatorTarget.splits;
+
+    const groupedSplits = [];
+    for (let i = 0; i < this.calculatorTarget.splits.length; i += groupSize) {
+      const group = this.calculatorTarget.splits.slice(i, i + groupSize);
+      if (group.length === groupSize) {
+        groupedSplits.push(group.reduce((sum, value) => sum + value, 0));
+      }
+    }
+    return groupedSplits;
+  }
+
   showSplitDeviation(splitIndex) {
     const devEl = document.getElementById('swDeviation');
     const numEl = document.getElementById('swDevSplitNum');
@@ -337,12 +356,13 @@ class StopwatchApp {
     const hintEl = document.getElementById('swDevHint');
     if (!devEl) return;
 
-    if (!this.calculatorTarget || splitIndex >= this.calculatorTarget.splits.length) {
+    const targetSplits = this.getTargetSplitsForCurrentDistance();
+    if (!targetSplits || splitIndex >= targetSplits.length) {
       devEl.style.display = 'none';
       return;
     }
 
-    const targetMs = this.calculatorTarget.splits[splitIndex];
+    const targetMs = targetSplits[splitIndex];
     const actualMs = splitIndex === 0
       ? this.splits[0].cumulativeTime
       : this.splits[splitIndex].cumulativeTime - this.splits[splitIndex - 1].cumulativeTime;
@@ -477,6 +497,11 @@ class StopwatchApp {
   saveToHistory() {
     if (this.splits.length === 0 && this.laps.length === 0) return;
 
+    const splitDurations = this.splits.map((split, index) => {
+      const previous = index === 0 ? 0 : this.splits[index - 1].cumulativeTime;
+      return split.cumulativeTime - previous;
+    });
+
     const session = {
       id: Date.now(),
       date: new Date().toISOString(),
@@ -484,7 +509,7 @@ class StopwatchApp {
       splits: this.splits,
       laps: this.laps,
       numSplits: this.splits.length,
-      bestSplit: this.splits.length > 0 ? Math.min(...this.splits.map(s => s.time)) : null
+      bestSplit: splitDurations.length > 0 ? Math.min(...splitDurations) : null
     };
 
     this.history.unshift(session);
@@ -611,17 +636,20 @@ class StopwatchApp {
     const stdDev   = Math.sqrt(variance);
     const cv       = (stdDev / avgSplitTime) * 100;
 
-    // Half comparison (requires >= 4 splits)
+    const recordedDistanceMeters = numSplits * splitDist;
+
+    // Half comparison by recorded distance.
     let firstHalfMs = null, secondHalfMs = null, fatigueIndex = null;
-    if (numSplits >= 4) {
-      const half = Math.floor(numSplits / 2);
+    if (numSplits >= 2 && numSplits % 2 === 0) {
+      const half = numSplits / 2;
       firstHalfMs  = splits[half - 1].cumulativeTime;
       secondHalfMs = totalMs - firstHalfMs;
       fatigueIndex = ((secondHalfMs - firstHalfMs) / firstHalfMs) * 100;
     }
 
-    // Pace per km
-    const paceMs    = totalMs / 0.8;
+    // Pace per km based on the recorded distance.
+    const recordedKm = Math.max(recordedDistanceMeters / 1000, 0.1);
+    const paceMs    = totalMs / recordedKm;
     const paceSecs  = Math.floor(paceMs / 1000);
     const paceMin   = Math.floor(paceSecs / 60);
     const paceSec   = paceSecs % 60;
@@ -643,7 +671,8 @@ class StopwatchApp {
       secondHalfMs,
       fatigueIndex,
       pacePerKm,
-      splitDistance: splitDist
+      splitDistance: splitDist,
+      recordedDistanceMeters
     };
   }
 
@@ -1016,6 +1045,21 @@ class StopwatchApp {
 // TAB SWITCHING
 // ═════════════════════════════════════════════════════════════════════
 
+StopwatchApp.prototype.updateSplitProgress = function() {
+  const el = document.getElementById('swSplitProgress');
+  if (!el) return;
+
+  const nextIdx = this.splits.length;
+  const targetSplits = this.getTargetSplitsForCurrentDistance();
+  if (!targetSplits || nextIdx >= targetSplits.length) {
+    el.textContent = targetSplits ? `${nextIdx}/${targetSplits.length} Splits` : '';
+    return;
+  }
+
+  const targetMs = targetSplits[nextIdx];
+  el.textContent = `Split ${nextIdx + 1}/${targetSplits.length} - Ziel: ${this.formatTime(targetMs)}`;
+};
+
 let stopwatch = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1028,11 +1072,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const tabName = e.target.dataset.tab;
+      const tabName = e.currentTarget.dataset.tab;
+      if (!tabName) return;
 
       // Update button states
       tabButtons.forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
+      e.currentTarget.classList.add('active');
 
       // Update content visibility
       tabContents.forEach(tc => tc.classList.remove('active'));

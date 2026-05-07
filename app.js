@@ -307,8 +307,8 @@ function updateSplitsTable(result) {
 
     row.innerHTML = `
       <td><span class="split-num">${splitNum}m</span></td>
-      <td>${formatTimeDisplay(split)}</td>
-      <td>${formatTimeDisplay(cumulative)}</td>
+      <td>${formatTime(split, true)}</td>
+      <td>${formatTime(cumulative, true)}</td>
       <td>${tempo}</td>
       <td><span class="${splitClass}">${percentStr}%</span></td>
     `;
@@ -856,7 +856,8 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 
   // Update toggle button
   const btn = document.getElementById('themeToggle');
-  btn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+  btn.setAttribute('aria-label', newTheme === 'dark' ? 'Light Mode aktivieren' : 'Dark Mode aktivieren');
+  btn.title = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
 });
 
 /**
@@ -1041,7 +1042,9 @@ function loadTheme() {
   const saved = localStorage.getItem('theme') || 'dark';
   const html = document.documentElement;
   html.setAttribute('data-theme', saved);
-  document.getElementById('themeToggle').textContent = saved === 'dark' ? '🌙' : '☀️';
+  const btn = document.getElementById('themeToggle');
+  btn.setAttribute('aria-label', saved === 'dark' ? 'Light Mode aktivieren' : 'Dark Mode aktivieren');
+  btn.title = saved === 'dark' ? 'Light Mode' : 'Dark Mode';
 }
 
 /**
