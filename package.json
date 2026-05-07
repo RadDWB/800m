@@ -1,0 +1,14 @@
+{
+  "name": "800m-pacing-calculator",
+  "version": "1.0.0",
+  "description": "Interactive 800m pacing calculator with gender-specific physiology and real-time trainer app",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 3001",
+    "start": "python -m http.server 3001"
+  },
+  "keywords": ["800m", "pacing", "training", "running", "sport-science"],
+  "author": "RadDWB",
+  "license": "MIT",
+  "private": true
+}

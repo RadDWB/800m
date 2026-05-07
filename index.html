@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>800m Pacing Calculator – Lauf-Strategien</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1>800m Pacing Calculator</h1>
+        <p class="header-subtitle">Berechne optimale Lauf-Strategien mit trainingswissenschaftlicher Basis</p>
+      </div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Theme umschalten" title="Dark/Light Mode">🌙</button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-layout">
+      <!-- Sticky Sidebar (Links) -->
+      <aside class="sidebar">
+        <!-- Zielzeit Slider -->
+        <section class="control-group">
+          <h2 class="control-label">Zielzeit</h2>
+          <div class="time-display">
+            <span id="finishTimeLabel" class="time-big">2:30</span>
+            <span class="time-unit">min:sec</span>
+          </div>
+          <input
+            type="range"
+            id="timeSlider"
+            min="90"
+            max="210"
+            value="150"
+            step="1"
+            class="slider"
+            aria-label="Zielzeit Slider von 1:30 bis 3:30"
+          >
+          <div class="slider-labels">
+            <span>1:30</span>
+            <span>3:30</span>
+          </div>
+        </section>
+
+        <!-- Strategie Selector -->
+        <section class="control-group">
+          <h2 class="control-label">Strategie</h2>
+          <div class="strategy-buttons">
+            <button class="strategy-btn" data-strategy="1" title="Schnell starten, Laktat-Einbruch am Ende">
+              <span class="strategy-emoji">⚡</span>
+              <span class="strategy-name">Aggressiv</span>
+            </button>
+            <button class="strategy-btn" data-strategy="2" title="Langsam starten, schneller Finish">
+              <span class="strategy-emoji">🎯</span>
+              <span class="strategy-name">Abwartend</span>
+            </button>
+            <button class="strategy-btn active" data-strategy="3" title="Konstante Geschwindigkeit über 800m">
+              <span class="strategy-emoji">➡️</span>
+              <span class="strategy-name">Gleichmäßig</span>
+            </button>
+            <button class="strategy-btn" data-strategy="4" title="Taktische Kicks mit Recoveries">
+              <span class="strategy-emoji">🎲</span>
+              <span class="strategy-name">Taktisch</span>
+            </button>
+            <button class="strategy-btn" data-strategy="5" title="Stetiger Anstieg zum Finish">
+              <span class="strategy-emoji">📈</span>
+              <span class="strategy-name">Dynamic</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Geschlecht -->
+        <section class="control-group">
+          <h2 class="control-label">Geschlecht</h2>
+          <div class="gender-buttons">
+            <button class="gender-btn active" data-gender="m" title="Männlich">♂️ Männlich</button>
+            <button class="gender-btn" data-gender="w" title="Weiblich">♀️ Weiblich</button>
+          </div>
+        </section>
+
+        <!-- Altersauswahl -->
+        <section class="control-group">
+          <h2 class="control-label">Alter (Jahre)</h2>
+          <select id="ageSelect" class="age-select" aria-label="Altersgruppe wählen">
+            <option value="10">10 Jahre</option>
+            <option value="11">11 Jahre</option>
+            <option value="12">12 Jahre</option>
+            <option value="13">13 Jahre</option>
+            <option value="14" selected>14 Jahre</option>
+            <option value="15">15 Jahre</option>
+            <option value="16">16 Jahre</option>
+            <option value="17">17 Jahre</option>
+            <option value="18">18 Jahre</option>
+            <option value="20">20 Jahre</option>
+            <option value="25">25 Jahre (Peak)</option>
+            <option value="30">30+ Jahre</option>
+          </select>
+        </section>
+
+        <!-- Strategie-Info -->
+        <section id="strategyInfo" class="strategy-info">
+          <h3 id="strategyTitle">Gleichmäßig</h3>
+          <div class="info-content">
+            <p><strong>Für:</strong> <span id="infoTarget">Anfänger & Technik-Training</span></p>
+            <p><strong>Effekt:</strong> <span id="infoEffect">Maximale Effizienz, lineare Laktat-Ansammlung</span></p>
+            <p><strong>Risiko:</strong> <span id="infoRisk">Wenig Taktik-Training</span></p>
+            <p><strong>Energiemix:</strong></p>
+            <div class="energy-bar">
+              <div class="energy-segment" id="energyAnaerob" style="width: 35%;"></div>
+              <div class="energy-segment energy-glyko" id="energyGlyko" style="width: 38%;"></div>
+              <div class="energy-segment energy-aerob" id="energyAerob" style="width: 27%;"></div>
+            </div>
+            <div class="energy-labels">
+              <span>35% Anaerob</span>
+              <span>38% Glykolyse</span>
+              <span>27% Aerob</span>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Content Area (Rechts, scrollbar) -->
+      <section class="content">
+        <!-- Split-Tabelle -->
+        <div class="card">
+          <h2>100m-Splits & Zwischenzeiteneiten</h2>
+          <div class="table-container">
+            <table class="splits-table">
+              <thead>
+                <tr>
+                  <th>Split</th>
+                  <th>Zeit</th>
+                  <th>Kumuliert</th>
+                  <th>Tempo</th>
+                  <th>% Zielzeit</th>
+                </tr>
+              </thead>
+              <tbody id="splitsTableBody">
+                <!-- Wird dynamisch gefüllt -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 400m Milestones -->
+          <div class="milestones">
+            <div class="milestone">
+              <div class="milestone-label">Nach 400m</div>
+              <div class="milestone-time" id="milestone400">2:00</div>
+              <div class="milestone-hint" id="milestone400Target">vs. 1:15 (Ziel)</div>
+            </div>
+            <div class="milestone">
+              <div class="milestone-label">Nach 800m</div>
+              <div class="milestone-time" id="milestone800">2:30</div>
+              <div class="milestone-hint">= Zielzeit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas-Diagramm: Split-Balken -->
+        <div class="card">
+          <h2>Split-Verlauf (Zeit pro 100m)</h2>
+          <canvas id="splitChart" class="chart"></canvas>
+        </div>
+
+        <!-- Canvas-Diagramm: Energy Profile -->
+        <div class="card">
+          <h2>Energiesystem-Aufteilung</h2>
+          <canvas id="energyChart" class="chart"></canvas>
+        </div>
+
+        <!-- Canvas-Diagramm: Laktat -->
+        <div class="card">
+          <h2>Laktat-Profil im Wettkampf</h2>
+          <canvas id="lactateChart" class="chart"></canvas>
+          <div class="lactate-legend">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #ef4444;"></span>
+              <span>Blutlaktat (mmol/L)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #a3e635;"></span>
+              <span>LT1 (2 mmol/L) – Grundlage</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #fbbf24;"></span>
+              <span>LT2 (4 mmol/L) – Threshold</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vergleich: 400m Splits -->
+        <div class="card">
+          <h2>400m-Vergleich</h2>
+          <div class="comparison">
+            <div class="comp-item">
+              <h4>Erste 400m</h4>
+              <div class="comp-time" id="firstHalf">1:15</div>
+              <div class="comp-hint">erste Hälfte</div>
+            </div>
+            <div class="comp-item">
+              <h4>Zweite 400m</h4>
+              <div class="comp-time" id="secondHalf">1:15</div>
+              <div class="comp-hint">zweite Hälfte</div>
+            </div>
+            <div class="comp-item">
+              <h4>Differenz (Split)</h4>
+              <div class="comp-time" id="splitDiff">0:00</div>
+              <div class="comp-hint" id="splitDiffHint">gleich</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Laktat-Werte Tabelle -->
+        <div class="card">
+          <div class="card-header">
+            <h2>Blutlaktat-Werte (mmol/L)</h2>
+            <div class="card-buttons">
+              <button id="printBtn" class="print-btn" title="Tabelle ausdrucken">🖨️ Drucken</button>
+              <button id="pdfBtn" class="print-btn" title="Als PDF speichern">📥 PDF</button>
+            </div>
+          </div>
+          <div id="lactateTableContainer" class="table-container">
+            <table class="lactate-table">
+              <thead>
+                <tr>
+                  <th>Split</th>
+                  <th>Zeit (sec)</th>
+                  <th>Rennzeit</th>
+                  <th>Laktat (mmol/L)</th>
+                  <th>Zone</th>
+                </tr>
+              </thead>
+              <tbody id="lactateTableBody">
+                <!-- Wird dynamisch gefüllt -->
+              </tbody>
+            </table>
+          </div>
+          <div class="lactate-zones">
+            <div class="zone-item">
+              <span class="zone-label" style="background: #22c55e;">Aerob</span>
+              <span>&lt; 2 mmol/L</span>
+            </div>
+            <div class="zone-item">
+              <span class="zone-label" style="background: #fbbf24;">Transition</span>
+              <span>2-4 mmol/L (LT1-LT2)</span>
+            </div>
+            <div class="zone-item">
+              <span class="zone-label" style="background: #ef4444;">Anaerob</span>
+              <span>&gt; 4 mmol/L</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <p>
+            <strong>Hinweis:</strong> Dieser Rechner basiert auf trainingswissenschaftlichen
+            Modellen (Gastin 2001, Daniels VO₂max-Concept). Die Ergebnisse sind Orientierungswerte,
+            echte Lauf-Leistung hängt von individuellem Training, Tagesform und taktischen Entscheidungen ab.
+          </p>
+          <p>
+            <strong>800m = Mixed-Event:</strong> kombiniert anaerobe (ATP-PC, Glykolyse) und aerobe Energiesysteme.
+          </p>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
