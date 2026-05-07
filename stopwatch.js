@@ -903,19 +903,20 @@ class StopwatchApp {
         </div>
 
         <!-- Coach Evaluation -->
-        <div class="results-evaluation" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);">
-          <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">🎯 Trainer-Bewertung</h3>
+        <div class="results-evaluation" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);background:#111827;">
+          <h3 style="margin:0 0 0.75rem;color:#ffffff;font-size:1rem;">🎯 Trainer-Bewertung</h3>
           <div class="coach-comment" style="
-            background:#0f172a;
-            border-left:3px solid ${gradeColor};
-            border-radius:0 8px 8px 0;
+            background:#020617;
+            border:1px solid #334155;
+            border-left:4px solid ${gradeColor};
+            border-radius:8px;
             padding:1rem;
-            color:#cbd5e1;
-            font-size:0.9rem;
+            color:#f8fafc;
+            font-size:0.95rem;
             line-height:1.6;
           ">${evaluation.coachComment}</div>
-          <h4 style="margin:1rem 0 0.5rem;color:#f1f5f9;font-size:0.9rem;">Trainingsempfehlungen</h4>
-          <ul class="recommendations-list" style="margin:0;padding-left:1.25rem;color:#94a3b8;font-size:0.875rem;line-height:1.7;">
+          <h4 style="margin:1rem 0 0.5rem;color:#ffffff;font-size:0.95rem;">Trainingsempfehlungen</h4>
+          <ul class="recommendations-list" style="margin:0;padding-left:1.25rem;color:#e5e7eb;font-size:0.92rem;line-height:1.75;">
             ${recHtml}
           </ul>
         </div>

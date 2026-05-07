@@ -1639,13 +1639,12 @@ body {
 /* â”€â”€â”€ Coach Comment â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .coach-comment {
-  font-style: italic;
   font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  color: #f8fafc;
   line-height: 1.7;
   padding: var(--sp-md) var(--sp-lg);
   border-left: 4px solid var(--strategy-3);
-  background: var(--bg-surface);
+  background: #020617;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
@@ -1664,6 +1663,7 @@ body {
   gap: var(--sp-md);
   font-size: var(--font-size-sm);
   line-height: 1.6;
+  color: #e5e7eb;
 }
 
 .recommendations-list li::before {
