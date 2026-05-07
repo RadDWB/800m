@@ -422,17 +422,23 @@ function updateLactateTable(result) {
   tbody.innerHTML = '';
 
   const lactateValues = calculateLactateValues(result);
+  const compactLabels = window.matchMedia('(max-width: 600px)').matches;
 
   lactateValues.forEach((data) => {
     const row = document.createElement('tr');
     const raceTime = formatTimeDisplay(data.cumulativeTime);
+    const zoneLabel = data.zone === 'aerob'
+      ? 'Aerob'
+      : data.zone === 'transition'
+        ? (compactLabels ? 'Trans.' : 'Transition')
+        : (compactLabels ? 'Ana.' : 'Anaerob');
 
     row.innerHTML = `
       <td><strong>${data.splitDistance}m</strong></td>
       <td>${data.splitTime.toFixed(2)}s</td>
       <td>${raceTime}</td>
       <td><span class="lactate-value ${data.zone}">${data.lactate.toFixed(1)}</span></td>
-      <td><span class="lactate-zone ${data.zone}">${data.zone === 'aerob' ? 'Aerob' : data.zone === 'transition' ? 'Transition' : 'Anaerob'}</span></td>
+      <td><span class="lactate-zone ${data.zone}">${zoneLabel}</span></td>
     `;
 
     tbody.appendChild(row);
@@ -498,7 +504,8 @@ function drawSplitChart(result) {
   canvas.width = rect.width;
   canvas.height = rect.height;
 
-  const padding = 40;
+  const isCompactChart = canvas.width < 420;
+  const padding = isCompactChart ? 34 : 40;
   const chartWidth = canvas.width - 2 * padding;
   const chartHeight = canvas.height - 2 * padding;
   const barWidth = chartWidth / result.splits.length;
@@ -538,14 +545,14 @@ function drawSplitChart(result) {
 
     // Draw label
     ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#e4e4e7';
-    ctx.font = '12px Inter';
+    ctx.font = isCompactChart ? '9px Inter' : '12px Inter';
     ctx.textAlign = 'center';
-    ctx.fillText(`${((index + 1) * 100)}m`, x + barWidth / 4, canvas.height - padding + 20);
+    ctx.fillText(isCompactChart ? `${((index + 1) * 100)}` : `${((index + 1) * 100)}m`, x + barWidth / 4, canvas.height - padding + 18);
 
     // Draw time value on bar
     ctx.fillStyle = 'white';
-    ctx.font = 'bold 11px Inter';
-    ctx.fillText(split.toFixed(1) + 's', x + barWidth / 4, y + 15);
+    ctx.font = isCompactChart ? 'bold 9px Inter' : 'bold 11px Inter';
+    ctx.fillText(isCompactChart ? split.toFixed(1) : split.toFixed(1) + 's', x + barWidth / 4, y + 14);
   });
 
   // Draw axes
@@ -560,7 +567,7 @@ function drawSplitChart(result) {
   // Y-axis labels
   ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#a1a1a6';
   ctx.textAlign = 'right';
-  ctx.font = '11px Inter';
+  ctx.font = isCompactChart ? '9px Inter' : '11px Inter';
   for (let i = 0; i <= 5; i++) {
     const value = minSplit + (range / 5) * i;
     const y = canvas.height - padding - (chartHeight / 5) * i;

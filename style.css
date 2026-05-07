@@ -2182,6 +2182,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: var(--sp-md);
+    max-width: 100%;
   }
 
   .sidebar,
@@ -2190,6 +2191,8 @@ body {
     padding: 0;
     border: 0;
     gap: var(--sp-md);
+    max-width: 100%;
+    min-width: 0;
   }
 
   .strategy-info {
@@ -2197,23 +2200,62 @@ body {
   }
 
   .strategy-buttons {
-    grid-template-columns: repeat(5, minmax(64px, 1fr));
-    gap: 6px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 112px;
+    grid-template-columns: none;
+    gap: 8px;
     overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
   }
 
   .strategy-btn,
   .gender-btn {
+    min-width: 0;
     min-height: 52px;
     padding: 8px 6px;
     border-radius: 12px;
-    font-size: 0.76rem;
+    font-size: 0.78rem;
+    overflow: hidden;
+  }
+
+  .strategy-btn {
+    scroll-snap-align: start;
+  }
+
+  .strategy-btn .icon,
+  .strategy-emoji .icon {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin: 0;
+  }
+
+  .strategy-name {
+    max-width: 100%;
+    font-size: 0.72rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
   }
 
   .card,
   .content .card {
     padding: var(--sp-md);
     border-radius: 14px;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .card h2,
+  .card-header h2 {
+    font-size: clamp(1.25rem, 6.2vw, 1.8rem);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
   }
 
   .splits-table {
@@ -2226,6 +2268,44 @@ body {
   .lactate-table td {
     padding: 8px 6px;
     white-space: nowrap;
+  }
+
+  .lactate-table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    font-size: 0.78rem;
+  }
+
+  .lactate-table th,
+  .lactate-table td {
+    padding: 9px 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lactate-table th:nth-child(1),
+  .lactate-table td:nth-child(1) { width: 18%; }
+  .lactate-table th:nth-child(2),
+  .lactate-table td:nth-child(2) { width: 21%; }
+  .lactate-table th:nth-child(3),
+  .lactate-table td:nth-child(3) { width: 20%; }
+  .lactate-table th:nth-child(4),
+  .lactate-table td:nth-child(4) { width: 18%; }
+  .lactate-table th:nth-child(5),
+  .lactate-table td:nth-child(5) { width: 23%; }
+
+  .lactate-zone {
+    max-width: 100%;
+    padding: 5px 6px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.72rem;
+  }
+
+  .chart {
+    height: 190px;
   }
 }
 
