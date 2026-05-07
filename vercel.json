@@ -1,18 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
+  "public": ".",
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/((?!.*\\..+$).*)",
       "dest": "index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
