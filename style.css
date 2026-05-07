@@ -1087,9 +1087,15 @@ body {
 .tab-content.active {
   display: grid;
   grid-template-columns: 350px 1fr;
+  grid-column: 1 / -1;
   gap: var(--sp-lg);
   flex: 1;
   overflow: hidden;
+}
+
+#stopwatch-tab.active {
+  display: block;
+  overflow-y: auto;
 }
 
 @keyframes fadeIn {
