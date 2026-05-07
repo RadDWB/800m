@@ -733,11 +733,11 @@ class StopwatchApp {
       `ein CV unter 3% deutet auf optimale anaerobe Kapazitätsauslastung hin.`;
 
     const recommendations = [];
-    if (cv >= 4) recommendations.push('Tempoläufe: 6–8 × 200m mit exakter Zielvorgabe und Stoppuhr zur Gleichmäßigkeits-Schulung.');
-    if (fi > 6)  recommendations.push('Laktattoleranzt-Training: 3 × 600m @ 800m-Renntempo mit vollständiger Erholung, Fokus auf zweite Hälfte halten.');
-    if (grade === 'A' || grade === 'B') recommendations.push('Wettkampfsimulation: 1 × 800m als Testwettkampf mit Taktik-Analyse (Positionierung, Spurwechsel).');
-    else recommendations.push('Grundlagenausdauer: 2–3 × 1000m @ 70% VO₂max zur Verbesserung der aeroben Basis und Laktat-Pufferung.');
-    if (recommendations.length < 2) recommendations.push('Reaktionskraft: Stufensprünge und kurze Steigerungsläufe zur Verbesserung der neuromuskulären Koordination.');
+    if (cv >= 4) recommendations.push('Tempol\u00e4ufe: 6\u20138 x 200m mit exakter Zielvorgabe und Stoppuhr zur Gleichm\u00e4\u00dfigkeits-Schulung.');
+    if (fi > 6)  recommendations.push('Laktattoleranz-Training: 3 x 600m @ 800m-Renntempo mit vollst\u00e4ndiger Erholung, Fokus auf zweite H\u00e4lfte halten.');
+    if (grade === 'A' || grade === 'B') recommendations.push('Wettkampfsimulation: 1 x 800m als Testwettkampf mit Taktik-Analyse (Positionierung, Spurwechsel).');
+    else recommendations.push('Grundlagenausdauer: 2\u20133 x 1000m @ 70% VO\u2082max zur Verbesserung der aeroben Basis und Laktat-Pufferung.');
+    if (recommendations.length < 2) recommendations.push('Reaktionskraft: Stufenspr\u00fcnge und kurze Steigerungsl\u00e4ufe zur Verbesserung der neuromuskul\u00e4ren Koordination.');
 
     return { grade, gradeLabel, consistencyRating, fatigueRating, coachComment, recommendations };
   }
