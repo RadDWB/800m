@@ -1,10 +1,3 @@
 {
-  "version": 2,
-  "public": ".",
-  "routes": [
-    {
-      "src": "/((?!.*\\..+$).*)",
-      "dest": "index.html"
-    }
-  ]
+  "version": 2
 }
