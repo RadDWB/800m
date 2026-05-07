@@ -2207,9 +2207,29 @@ body {
     gap: 8px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 2px 2px 8px;
+    padding: 2px 28px 10px 2px;
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
+    border-radius: 14px;
+    box-shadow:
+      inset -18px 0 18px -18px var(--strategy-3),
+      inset 18px 0 18px -18px rgba(15, 23, 42, 0.25);
+    scrollbar-color: var(--strategy-3) var(--border);
+  }
+
+  .strategy-buttons::-webkit-scrollbar {
+    height: 7px;
+  }
+
+  .strategy-buttons::-webkit-scrollbar-track {
+    background: var(--border);
+    border-radius: var(--radius-full);
+  }
+
+  .strategy-buttons::-webkit-scrollbar-thumb {
+    background: var(--strategy-3);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--bg-card);
   }
 
   .strategy-btn,

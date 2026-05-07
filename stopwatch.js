@@ -782,13 +782,13 @@ class StopwatchApp {
       const cum        = metrics.cumulativeTimes[i] || 0;
       const delta      = t - avgMs;
       const deltaStr   = (delta >= 0 ? '+' : '') + (delta / 1000).toFixed(2) + 's';
-      const deltaColor = delta < 0 ? '#22c55e' : delta > 0 ? '#ef4444' : 'inherit';
+      const deltaColor = delta < 0 ? '#4ade80' : delta > 0 ? '#f87171' : '#f8fafc';
       return `<tr>
-        <td>${i + 1}</td>
-        <td>${metrics.splitDistance}m</td>
-        <td>${this.formatTime(t)}</td>
-        <td>${this.formatTime(cum)}</td>
-        <td style="color:${deltaColor};font-weight:600">${deltaStr}</td>
+        <td style="padding:0.65rem 0.5rem;border-bottom:1px solid #334155;color:#f8fafc;font-weight:800;">${i + 1}</td>
+        <td style="padding:0.65rem 0.5rem;border-bottom:1px solid #334155;color:#e2e8f0;">${metrics.splitDistance}m</td>
+        <td style="padding:0.65rem 0.5rem;border-bottom:1px solid #334155;color:#ffffff;font-weight:800;">${this.formatTime(t)}</td>
+        <td style="padding:0.65rem 0.5rem;border-bottom:1px solid #334155;color:#e2e8f0;">${this.formatTime(cum)}</td>
+        <td style="padding:0.65rem 0.5rem;border-bottom:1px solid #334155;color:${deltaColor};font-weight:800">${deltaStr}</td>
       </tr>`;
     }).join('');
 
@@ -806,8 +806,8 @@ class StopwatchApp {
 
     modal.innerHTML = `
       <div class="results-container" style="
-        background:var(--bg-card,#1e2533);
-        border:1px solid var(--border,#2d3748);
+        background:#0f172a;
+        border:1px solid #334155;
         border-radius:16px;
         max-width:680px;
         width:100%;
@@ -825,15 +825,15 @@ class StopwatchApp {
           display:flex;
           align-items:center;
           justify-content:space-between;
-          border-bottom:1px solid var(--border,#2d3748);
+          border-bottom:1px solid #334155;
         ">
           <div>
             <h2 style="margin:0;font-size:1.4rem;color:#f1f5f9;">🏁 Lauf-Auswertung</h2>
-            <p style="margin:0.25rem 0 0;color:#94a3b8;font-size:0.85rem;">${dateStr} · ${timeStr}</p>
+            <p style="margin:0.25rem 0 0;color:#e2e8f0;font-size:0.85rem;">${dateStr} · ${timeStr}</p>
           </div>
           <button id="closeResultsBtn" style="
             background:transparent;border:1px solid #475569;
-            color:#94a3b8;border-radius:8px;padding:0.4rem 0.8rem;
+            color:#e2e8f0;border-radius:8px;padding:0.4rem 0.8rem;
             cursor:pointer;font-size:0.9rem;
           ">✕ Schließen</button>
         </div>
@@ -842,12 +842,12 @@ class StopwatchApp {
         <div class="results-hero" style="
           padding:2rem 1.5rem;
           text-align:center;
-          border-bottom:1px solid var(--border,#2d3748);
+          border-bottom:1px solid #334155;
         ">
           <div class="results-time" style="font-size:3rem;font-weight:700;color:#f1f5f9;letter-spacing:-1px;">
             ${this.formatTime(metrics.totalTime)}
           </div>
-          <div style="margin-top:0.5rem;color:#94a3b8;font-size:0.9rem;">
+          <div style="margin-top:0.5rem;color:#e2e8f0;font-size:0.9rem;">
             ${metrics.numSplits} Split${metrics.numSplits !== 1 ? 's' : ''} · ${metrics.pacePerKm}
           </div>
           <div class="results-grade" style="
@@ -870,29 +870,29 @@ class StopwatchApp {
           display:grid;
           grid-template-columns:repeat(2,1fr);
           gap:1px;
-          background:var(--border,#2d3748);
-          border-bottom:1px solid var(--border,#2d3748);
+          background:#334155;
+          border-bottom:1px solid #334155;
         ">
-          <div class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;">
-            <div class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Gleichmäßigkeit (CV)</div>
-            <div class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;">${metrics.cv.toFixed(1)}%</div>
+          <div class="metric-card" style="background:#0f172a;padding:1rem;text-align:center;">
+            <div class="metric-label" style="font-size:0.75rem;color:#cbd5e1;text-transform:uppercase;letter-spacing:.05em;font-weight:800;">Gleichmäßigkeit (CV)</div>
+            <div class="metric-value" style="font-size:1.75rem;font-weight:800;color:#ffffff;margin-top:0.25rem;">${metrics.cv.toFixed(1)}%</div>
           </div>
-          <div class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;">
-            <div class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;">Ermüdungsindex</div>
-            <div class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;">${metrics.fatigueIndex !== null ? metrics.fatigueIndex.toFixed(1) + '%' : '–'}</div>
+          <div class="metric-card" style="background:#0f172a;padding:1rem;text-align:center;">
+            <div class="metric-label" style="font-size:0.75rem;color:#cbd5e1;text-transform:uppercase;letter-spacing:.05em;font-weight:800;">Ermüdungsindex</div>
+            <div class="metric-value" style="font-size:1.75rem;font-weight:800;color:#ffffff;margin-top:0.25rem;">${metrics.fatigueIndex !== null ? metrics.fatigueIndex.toFixed(1) + '%' : '–'}</div>
           </div>
-          ${halfHtml.replace(/class="metric-card"/g, 'class="metric-card" style="background:var(--bg-card,#1e2533);padding:1rem;text-align:center;"')
-            .replace(/class="metric-label"/g, 'class="metric-label" style="font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;"')
-            .replace(/class="metric-value"/g, 'class="metric-value" style="font-size:1.6rem;font-weight:700;color:#f1f5f9;margin-top:0.25rem;"')}
+          ${halfHtml.replace(/class="metric-card"/g, 'class="metric-card" style="background:#0f172a;padding:1rem;text-align:center;"')
+            .replace(/class="metric-label"/g, 'class="metric-label" style="font-size:0.75rem;color:#cbd5e1;text-transform:uppercase;letter-spacing:.05em;font-weight:800;"')
+            .replace(/class="metric-value"/g, 'class="metric-value" style="font-size:1.75rem;font-weight:800;color:#ffffff;margin-top:0.25rem;"')}
         </div>
 
         <!-- Split Table -->
-        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);">
-          <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">Split-Übersicht</h3>
+        <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #334155;background:#0f172a;">
+          <h3 style="margin:0 0 0.75rem;color:#ffffff;font-size:1rem;">Split-Übersicht</h3>
           <div style="overflow-x:auto;">
-            <table style="width:100%;border-collapse:collapse;font-size:0.875rem;color:#cbd5e1;">
+            <table style="width:100%;border-collapse:collapse;font-size:0.875rem;color:#f8fafc;background:#020617;">
               <thead>
-                <tr style="border-bottom:1px solid #2d3748;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;">
+                <tr style="border-bottom:1px solid #475569;color:#e2e8f0;font-size:0.75rem;text-transform:uppercase;">
                   <th style="padding:0.5rem 0.5rem;text-align:left;">#</th>
                   <th style="padding:0.5rem 0.5rem;text-align:left;">Distanz</th>
                   <th style="padding:0.5rem 0.5rem;text-align:left;">Zeit</th>
@@ -906,7 +906,7 @@ class StopwatchApp {
         </div>
 
         <!-- Coach Evaluation -->
-        <div class="results-evaluation" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);background:#111827;">
+        <div class="results-evaluation" style="padding:1.25rem 1.5rem;border-bottom:1px solid #334155;background:#111827;">
           <h3 style="margin:0 0 0.75rem;color:#ffffff;font-size:1rem;">🎯 Trainer-Bewertung</h3>
           <div class="coach-comment" style="
             background:#020617;
@@ -925,26 +925,27 @@ class StopwatchApp {
         </div>
 
         <!-- QR Code -->
-        <div class="results-qr" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border,#2d3748);text-align:center;">
+        <div class="results-qr" style="padding:1.25rem 1.5rem;border-bottom:1px solid #334155;text-align:center;background:#0f172a;color:#f8fafc;">
           <h3 style="margin:0 0 0.75rem;color:#f1f5f9;font-size:1rem;">📱 Ergebnis teilen</h3>
           <div id="qrCodeDisplay" style="display:inline-block;background:#fff;padding:8px;border-radius:8px;"></div>
-          <p style="margin:0.5rem 0 0;color:#64748b;font-size:0.8rem;">QR-Code scannen → Ergebnis auf dem Smartphone öffnen</p>
+          <p style="margin:0.5rem 0 0;color:#e2e8f0;font-size:0.82rem;">QR-Code scannen → Ergebnis auf dem Smartphone öffnen</p>
         </div>
 
         <!-- Footer Buttons -->
         <div class="results-actions" style="
           padding:1rem 1.5rem;
           display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:flex-end;
+          background:#020617;border-top:1px solid #334155;
         ">
           <button id="exportResultsBtn" style="
             padding:0.6rem 1.2rem;
             background:#1e3a5f;border:1px solid #3b82f6;
-            color:#93c5fd;border-radius:8px;cursor:pointer;font-size:0.875rem;
+            color:#dbeafe;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:800;
           ">📥 Exportieren</button>
           <button id="closeResultsBtn2" style="
             padding:0.6rem 1.2rem;
             background:#2d1515;border:1px solid #ef4444;
-            color:#fca5a5;border-radius:8px;cursor:pointer;font-size:0.875rem;
+            color:#fee2e2;border-radius:8px;cursor:pointer;font-size:0.875rem;font-weight:800;
           ">✕ Schließen</button>
         </div>
       </div>
