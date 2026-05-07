@@ -773,7 +773,7 @@ class StopwatchApp {
       'position:fixed', 'inset:0', 'z-index:9999',
       'background:rgba(0,0,0,0.85)',
       'display:flex', 'align-items:flex-start', 'justify-content:center',
-      'overflow-y:auto', 'padding:1rem'
+      'overflow:hidden', 'padding:1rem'
     ].join(';');
 
     // Build split table rows using cumulativeTimes from metrics
@@ -811,8 +811,11 @@ class StopwatchApp {
         border-radius:16px;
         max-width:680px;
         width:100%;
-        margin:auto;
-        overflow:hidden;
+        max-height:calc(100dvh - 2rem);
+        margin:0 auto;
+        overflow-y:auto;
+        overflow-x:hidden;
+        -webkit-overflow-scrolling:touch;
         font-family:inherit;
       ">
         <!-- Header -->
